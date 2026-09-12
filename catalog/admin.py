@@ -241,9 +241,9 @@ class CategoryAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
 
 @admin.register(CastingModel)
 class CastingModelAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
-    list_display = ('preview', 'label', 'category', 'casting_type',
-                    'photo_count', 'price_summary', 'code', 'is_active', 'is_featured')
-    list_display_links = ('preview', 'label')
+    list_display = ('code', 'label', 'category', 'casting_type',
+                    'photo_count', 'price_summary', 'is_active', 'is_featured')
+    list_display_links = ('code', 'label')
     list_editable = ('is_active', 'is_featured')
     list_filter = ('category', 'is_active', 'is_featured')
     search_fields = ('label', 'code', 'category__label', 'description')
