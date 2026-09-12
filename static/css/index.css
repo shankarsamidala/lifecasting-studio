@@ -1,0 +1,550 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Wordmark face — "Laughing and Smiling" by Cataleya Butcher.
+   LICENCE: the distributed file is marked FREE FOR PERSONAL USE; a
+   commercial licence must be purchased from cataleyatyperface@gmail.com
+   before this site goes live. Used here on the logo only.
+   font-display:swap so the wordmark never blocks first paint. */
+@font-face {
+  font-family: 'Laughing and Smiling';
+  src: url('../fonts/laughing-and-smiling.woff2') format('woff2'),
+       url('../fonts/laughing-and-smiling.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================================
+   LIFECASTING STUDIO — CANONICAL DESIGN TOKENS
+   ------------------------------------------------------------
+   SINGLE SOURCE OF TRUTH for the palette. templates/base.html
+   reads these same channels via rgb(var(--rgb-*) / <alpha-value>)
+   so Tailwind utilities and plain CSS cannot drift apart.
+
+   Channels are space-separated (not hex) so Tailwind opacity
+   modifiers — border-ink-900/10, bg-ink-900/45 — resolve against
+   the same values.
+
+   COLOUR DOCTRINE
+   The grounds are warm NEUTRALS, not pink. Rose appears in three
+   places only: things you can act on, prices, and a 5% blush on
+   fields and selected states. Everything else is paper and ink.
+   Gold is retired — it never passed contrast (2.24:1) and a second
+   accent was competing with the first.
+
+   Every text/background pair below meets WCAG 2.1 AA.
+   ============================================================ */
+
+:root {
+  /* ---- grounds: warm neutrals with a whisper of rose in the hue,
+          so they read as chosen rather than default grey ---- */
+  --rgb-paper:   252 252 251;   /* page ground                        */
+  --rgb-mist:    244 243 241;   /* alternating sections, image beds    */
+  --rgb-sunken:  237 235 233;   /* wells, inset areas                 */
+
+  /* ---- rose: ONE pink — Dribbble #ea4c89 ----
+
+     Every resting state on the site is #ea4c89. rose-600 is the same hue
+     (337deg) a few steps darker and appears ONLY on hover/press, where a
+     colour shift is the feedback and white labels gain contrast.
+
+     Known tradeoff: #ea4c89 is bright, so white text on it is 3.56:1 and
+     text-primary on paper is 3.47:1 — both below the 4.5:1 AA threshold.
+     Chosen deliberately for brand consistency. To make text pass instead,
+     point --rgb-primary at --rgb-rose-600. */
+  --rgb-rose-500: 234  76 137;  /* #ea4c89 THE pink — every resting state */
+  --rgb-rose-600: 204  61 120;  /* #cc3d78 hover/press only — white 4.66  */
+  --rgb-blush:   251 241 244;   /* #ea4c89 @6%  — fields, selected states */
+  --rgb-blush-2: 250 234 240;   /* #ea4c89 @10% — hover on the above      */
+
+  /* ---- ink: warm near-blacks ---- */
+  --rgb-ink-900: 31 26 28;      /* 16.73:1 on paper                   */
+  --rgb-ink-700: 89 80 84;      /*  7.58:1                            */
+  --rgb-ink-500: 111 102 107;   /*  5.40:1 — AA on every ground       */
+
+  /* ---- semantic: a separate axis from the accent ---- */
+  --rgb-success: 47 107 71;     /*  6.17:1 on paper                   */
+  --rgb-success-wash: 235 242 237;
+  --rgb-whatsapp: 37 211 102;   /* third-party brand mark             */
+
+  /* ---- semantic aliases ---- */
+  /* brand and primary are the SAME pink — one colour across the site.
+     Both aliases are kept so existing bg-brand / bg-primary classes work. */
+  --rgb-brand:         var(--rgb-rose-500);
+  --rgb-brand-hover:   var(--rgb-rose-600);
+  --rgb-primary:       var(--rgb-rose-500);
+  --rgb-primary-hover: var(--rgb-rose-600);
+  --rgb-surface:       var(--rgb-paper);
+  --rgb-surface-alt:   var(--rgb-mist);
+  --rgb-surface-tint:  var(--rgb-blush);
+  --rgb-text:          var(--rgb-ink-900);
+  --rgb-text-muted:    var(--rgb-ink-700);
+  --rgb-text-subtle:   var(--rgb-ink-500);
+
+  /* ---- resolved colours, for plain CSS ---- */
+  --color-brand:         rgb(var(--rgb-brand));
+  --color-brand-hover:   rgb(var(--rgb-brand-hover));
+  --color-primary:       rgb(var(--rgb-primary));
+  --color-primary-hover: rgb(var(--rgb-primary-hover));
+  --color-surface:       rgb(var(--rgb-surface));
+  --color-surface-alt:   rgb(var(--rgb-surface-alt));
+  --color-surface-tint:  rgb(var(--rgb-surface-tint));
+  --color-text:          rgb(var(--rgb-text));
+  --color-text-muted:    rgb(var(--rgb-text-muted));
+  --color-text-subtle:   rgb(var(--rgb-text-subtle));
+  --color-ink-900:       rgb(var(--rgb-ink-900));
+  --color-success:       rgb(var(--rgb-success));
+
+  /* ---- hairlines. One border colour, three weights of presence. ---- */
+  --line:        rgb(var(--rgb-ink-900) / 0.09);
+  --line-strong: rgb(var(--rgb-ink-900) / 0.16);
+
+  /* ---- typography ---- */
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-logo: 'Laughing and Smiling', 'Fraunces', ui-serif, Georgia, serif;
+
+  /* ---- the signature shape: a hand-cast, organic edge ---- */
+  --radius-cast: 42% 58% 61% 39% / 45% 40% 60% 55%;
+  --radius-cast-alt: 58% 42% 39% 61% / 40% 55% 45% 60%;
+
+  /* ---- elevation: two levels. Resting, and lifted. Neutral, never
+          tinted — coloured shadows are what made the page feel pink. ---- */
+  --shadow-rest: 0 1px 2px rgb(var(--rgb-ink-900) / 0.04),
+                 0 6px 20px -14px rgb(var(--rgb-ink-900) / 0.14);
+  --shadow-lift: 0 2px 4px rgb(var(--rgb-ink-900) / 0.05),
+                 0 20px 40px -22px rgb(var(--rgb-ink-900) / 0.20);
+
+  --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;      /* 17px */
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ============================================================
+   TYPOGRAPHY — restraint in weight is most of what reads premium.
+   Headings 600, body 400, one step of 500 for emphasis.
+   ============================================================ */
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  color: var(--color-text);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+  font-variation-settings: 'SOFT' 0, 'WONK' 0;
+}
+
+h1 { font-optical-sizing: auto; letter-spacing: -0.032em; }
+
+/* LOGO LOCKUP — mark and wordmark scale together.
+
+   Everything inside is sized in `em`, so the ONE control is font-size on
+   .site-logo. Change that and the mark, the gap and the wordmark all move
+   in proportion; nothing has to be retuned by hand.
+
+   Declared after the heading rule so it wins on the footer logo, which is
+   an h2. Scripts need positive tracking and a size bump — the tight
+   letter-spacing headings use would collide the joins, and this face has a
+   small x-height next to Fraunces. */
+.site-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-size: 1.125rem;        /* <- the single control (mobile) */
+  line-height: 1;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+@media (min-width: 640px) {
+  .site-logo { font-size: 1.3125rem; }
+}
+
+/* Header lockup on phones: the mark alone. The wordmark is a script face at
+   ~21px there, which competes with the hamburger and the Book Slot button
+   for a cramped bar. Dropping it lets the mark run larger and read better. */
+.site-logo--mark-only { font-size: 1.375rem; }
+
+@media (max-width: 639px) {
+  .site-logo--mark-only .site-logo__text { display: none; }
+}
+
+.site-logo__mark {
+  height: 2em;                /* follows the lockup's font-size */
+  width: auto;
+  flex: none;
+}
+
+.site-logo__text {
+  font-family: var(--font-logo);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  font-size: 1.18em;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: -0.06em;
+}
+
+/* Footer runs the same lockup one step larger. */
+.site-logo--lg { font-size: 1.25rem; }
+@media (min-width: 640px) {
+  .site-logo--lg { font-size: 1.4375rem; }
+}
+
+p { text-wrap: pretty; }
+
+/* Section labels. The ONE place uppercase + wide tracking belongs —
+   and as plain text, never a coloured pill. The pills were the main
+   source of scattered pink. */
+.eyebrow {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+/* Genuine legal fine print. Not for interface text. */
+.text-fineprint { font-size: 0.8125rem; line-height: 1.5; }
+
+/* Tabular figures wherever prices or counts align in a column. */
+.nums { font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+a:focus-visible { outline-offset: 2px; }
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s var(--ease-soft);
+}
+.skip-link:focus { top: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   FORM FIELDS — this is where the rose tint belongs. A field is
+   an invitation to act, so it carries the accent at 5%.
+   ============================================================ */
+
+input[type="text"], input[type="email"], input[type="tel"],
+input[type="search"], input[type="number"], input[type="date"],
+textarea, select {
+  width: 100%;
+  padding: 0.8125rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.875rem;
+  background-color: var(--color-surface-tint);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1rem;            /* 16px — stops iOS zoom-on-focus */
+  line-height: 1.5;
+  transition: border-color 0.2s var(--ease-soft),
+              background-color 0.2s var(--ease-soft),
+              box-shadow 0.2s var(--ease-soft);
+}
+
+input::placeholder, textarea::placeholder { color: var(--color-text-subtle); }
+
+input:hover, textarea:hover, select:hover {
+  background-color: rgb(var(--rgb-blush-2));
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background-color: var(--color-surface);
+  box-shadow: 0 0 0 3px rgb(var(--rgb-primary) / 0.14);
+}
+
+label { font-size: 0.875rem; font-weight: 500; color: var(--color-text-muted); }
+
+/* ============================================================
+   SURFACES — border, fill, radius and shadow each say "separate
+   object". Spent by role, not stamped on every block.
+   ============================================================ */
+
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+}
+
+.glass-card {
+  background: rgb(var(--rgb-surface) / 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+}
+
+.glass-card-hover {
+  transition: transform 0.4s var(--ease-soft),
+              box-shadow 0.4s var(--ease-soft),
+              border-color 0.4s var(--ease-soft);
+}
+
+/* Only on devices with a real pointer. On a touchscreen :hover latches after
+   a tap and the card stays lifted until you tap elsewhere, which reads as a
+   stuck card rather than feedback. */
+@media (hover: hover) and (pointer: fine) {
+  .glass-card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--line-strong);
+  }
+}
+
+.elev-rest { box-shadow: var(--shadow-rest); }
+.elev-lift { box-shadow: var(--shadow-lift); }
+
+/* Warm image scrim, for text over photography only. */
+.scrim {
+  background: linear-gradient(to top,
+    rgb(var(--rgb-ink-900) / 0.55) 0%,
+    rgb(var(--rgb-ink-900) / 0.18) 42%,
+    rgb(var(--rgb-ink-900) / 0) 100%);
+}
+
+/* The hero ground. One barely-there warm wash — no rose radial,
+   no gold radial. The photography supplies the colour. */
+.hero-gradient {
+  background:
+    radial-gradient(ellipse 80% 60% at 78% 8%, rgb(var(--rgb-brand) / 0.05) 0%, transparent 70%),
+    var(--color-surface);
+}
+
+/* ============================================================
+   THE SIGNATURE SHAPE
+   --radius-cast is the only element in the system specific to
+   lifecasting rather than generic e-commerce, so it is the motif.
+   ============================================================ */
+
+.cast-shape { border-radius: var(--radius-cast); overflow: hidden; }
+.cast-shape-alt { border-radius: var(--radius-cast-alt); overflow: hidden; }
+
+.cast-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  flex: none;
+  border-radius: var(--radius-cast);
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.875rem 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;   /* 15px — never below the 14px floor */
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.3s var(--ease-soft),
+              box-shadow 0.3s var(--ease-soft),
+              background-color 0.3s var(--ease-soft),
+              border-color 0.3s var(--ease-soft);
+}
+
+/* Dribbble pink fill with a white label, as specified.
+   NOTE: white on #ea4c89 is 3.56:1, below the 4.5:1 AA threshold for
+   text this size. Hover darkens to #cc3d78 (4.66:1), which does pass.
+   To make the resting state pass too, swap background-color here for
+   var(--color-primary-hover). */
+.btn-primary {
+  background-color: var(--color-brand);
+  color: #ffffff;
+  box-shadow: 0 8px 20px -12px rgb(var(--rgb-brand) / 0.5);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px -12px rgb(var(--rgb-primary-hover) / 0.5);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  border: 1px solid var(--line-strong);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-surface-alt);
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+}
+
+/* A quiet pill for metadata — ratings, groups, counts. Neutral by
+   default; these used to be gold and pink. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar { display: none !important; }
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Product gallery thumbnails. Sized here rather than with utility classes so
+   the strip can never render at full image size if the Tailwind build is
+   stale. Square, fixed, and the same on every breakpoint. */
+.thumb-btn {
+  flex: 0 0 auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  overflow: hidden;
+}
+.thumb-btn > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (min-width: 640px) {
+  .thumb-btn { width: 4rem; height: 4rem; }
+}
+
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* MOBILE NAV — collapsible sections.
+
+   Height is animated with the grid 0fr->1fr technique, which needs no JS
+   measuring of scrollHeight and handles content of any length.
+
+   The `visibility` switch is the accessibility half: a collapsed section
+   still occupies the DOM, so without it the hidden links stay in the tab
+   order and a keyboard user tabs into a menu they can't see. The 0.3s delay
+   keeps them visible for the duration of the closing animation. */
+.collapsible {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s var(--ease-soft);
+}
+
+.collapsible > * {
+  overflow: hidden;
+  min-height: 0;
+  visibility: hidden;
+  transition: visibility 0s 0.3s;
+}
+
+.collapsible[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.collapsible[data-open="true"] > * {
+  visibility: visible;
+  transition: visibility 0s 0s;
+}
+
+/* Animated Plus / Minus Icon for Mobile Collapsible Menu */
+.animated-plus {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+}
+.animated-plus::before,
+.animated-plus::after {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+  border-radius: 1px;
+  transition: transform 0.25s var(--ease-soft), opacity 0.25s var(--ease-soft);
+}
+.animated-plus::before {
+  top: 5px;
+  left: 0;
+  width: 12px;
+  height: 2px;
+}
+.animated-plus::after {
+  top: 0;
+  left: 5px;
+  width: 2px;
+  height: 12px;
+}
+[aria-expanded="true"] .animated-plus::after {
+  transform: rotate(90deg);
+  opacity: 0;
+}
+[aria-expanded="true"] .animated-plus::before {
+  transform: rotate(180deg);
+}

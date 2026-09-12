@@ -1,0 +1,150 @@
+// Prisma schema for the Lifecasting Studio admin dashboard.
+//
+// Provider is "sqlite" for now. To migrate to Supabase later:
+//   1. Change `provider = "postgresql"` below and point `url` at the Supabase
+//      connection string (via DATABASE_URL).
+//   2. Run `npx prisma migrate deploy` against the new database.
+//   3. Swap StorageAdapter (see server/src/storage.ts) to the Supabase Storage
+//      implementation — no route code needs to change.
+// SQLite and Postgres are both supported by every model/field type used here.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Category {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  label            String
+  position         Int      @default(0)
+  filters          Json? // FilterGroup[] — e.g. [{ slug: '2-casting', label: '2 Casting' }]
+  warranty         String?
+  castingDelivery  Json? // string[]
+  finalDelivery    Json? // string[]
+  castingProcess   String?
+  materials        Json? // string[]
+  preservation     Json? // string[]
+  showReviews      Boolean  @default(false)
+  models           Model[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+enum PricingType {
+  flat
+  ageTiers
+  sizeTiers
+  formula
+}
+
+model Model {
+  id               String      @id @default(cuid())
+  categoryId       String
+  category         Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  slug             String
+  label            String
+  code             String?
+  group            String? // matches a Category.filters[].slug, e.g. '2-casting'
+  imageUrl         String?
+  variantType      String      @default("standard") // 'standard' | 'customization'
+  customizationNote String?
+  position         Int         @default(0)
+  pricingType      PricingType @default(flat)
+  // pricingConfig shape depends on pricingType:
+  //   flat     -> { price?: number, strikePrice?: number }
+  //   ageTiers -> { tiers: { label: string, price: number }[] }
+  //   sizeTiers-> { tiers: { label: string, price: number }[] }
+  //   formula  -> { text: string }
+  pricingConfig    Json
+  preservationNote String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@unique([categoryId, slug])
+}
+
+model HeroImage {
+  id        String   @id @default(cuid())
+  src       String
+  title     String
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model GalleryImage {
+  id        String   @id @default(cuid())
+  src       String
+  title     String
+  category  String? // free-text tag, e.g. 'baby-2' | 'baby-4'
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  name       String
+  quote      String
+  rating     Int      @default(5)
+  category   String
+  reviewHref String
+  avatarUrl  String?
+  position   Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model NavLink {
+  id       String @id @default(cuid())
+  group    String // e.g. 'customer-service'
+  label    String
+  href     String
+  position Int    @default(0)
+}
+
+// Singleton settings rows — always exactly one row per table (id fixed to "singleton").
+model FooterSettings {
+  id                String   @id @default("singleton")
+  tagline           String
+  safetyTitle       String
+  safetyText        String
+  phone             String
+  phoneHref         String
+  email             String
+  addressLine1      String
+  addressLine2      String
+  addressLine3      String
+  businessHours     Json // { label: string, hours: string }[]
+  socialLinks       Json // { label: string, href: string, icon: string }[]
+  privacyHref       String
+  termsHref         String
+  updatedAt         DateTime @updatedAt
+}
+
+model SiteSettings {
+  id                     String   @id @default("singleton")
+  whatsappNumber         String
+  bookingMessageTemplate String
+  priceDisclaimer        String
+  viewAllReviewsHref     String
+  shippingPolicy         String   @default("")
+  updatedAt              DateTime @updatedAt
+}

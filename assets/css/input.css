@@ -1,0 +1,10 @@
+/* Tailwind source. Compiled to static/css/tailwind.css by:
+ *   .bin/tailwindcss -i assets/css/input.css -o static/css/tailwind.css --minify
+ *
+ * The design tokens and component classes live in static/css/index.css, which
+ * base.html links immediately before the compiled output — the same cascade
+ * order the CDN produced, so nothing shifts.
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

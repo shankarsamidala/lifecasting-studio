@@ -1,0 +1,42 @@
+# ── Secrets ───────────────────────────────────────────────────────────
+# Never commit these. The repo is public; .env.example documents the
+# variable names instead, and Cloud Run injects real values at runtime.
+.env
+.env.*
+!.env.example
+
+# ── Python ────────────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ── Django ────────────────────────────────────────────────────────────
+# Local database and its backups; production runs on Supabase Postgres.
+db.sqlite3
+db.sqlite3.*
+*.log
+
+# collectstatic output — regenerated at build time.
+staticfiles/
+
+# Uploaded images belong to the running site, not to source control.
+media/
+
+# ── Tooling ───────────────────────────────────────────────────────────
+# Downloaded Tailwind standalone binary (47M). The Dockerfile fetches
+# its own copy; see the comment in templates/base.html to rebuild locally.
+.bin/
+
+# ── Legacy React prototype ────────────────────────────────────────────
+webstie/node_modules/
+webstie/dist/
+
+# ── OS / editor ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

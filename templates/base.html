@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Lifecasting Studio — Preserve Precious Memories{% endblock %}</title>
+
+  <!-- Favicon / touch icon. The mark is wider than it is tall, so these are
+       padded to a square rather than cropped. -->
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32.png' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon-180.png' %}">
+
+  <!-- Google Fonts: Fraunces & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Canonical design tokens. MUST load before the Tailwind config below,
+       which resolves every colour from the custom properties defined here. -->
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+  <!-- Compiled Tailwind. Built from templates by:
+         .bin/tailwindcss -i assets/css/input.css -o static/css/tailwind.css --minify
+       Config lives in tailwind.config.js. Re-run after adding new classes. -->
+  <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-screen bg-surface text-text antialiased">
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- HEADER -->
+  {% include 'includes/header.html' %}
+
+  <!-- MAIN CONTENT -->
+  <main id="main" class="flex-grow">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- FLOATING WHATSAPP CONCIERGE WIDGET
+       Pages that carry their own sticky action bar override this block to
+       empty, so the two never sit on top of each other. -->
+  {% block floating_cta %}
+  <a
+    href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hi!%20I'd%20like%20to%20inquire%20about%20a%20lifecasting%20session."
+    target="_blank"
+    rel="noopener"
+    aria-label="Chat with the studio on WhatsApp"
+    class="fixed bottom-6 right-5 z-50 inline-flex items-center gap-2.5 rounded-full border border-ink-900/10 bg-surface px-5 py-3.5 font-sans text-sm font-semibold text-text shadow-lift transition-transform duration-300 ease-soft hover:-translate-y-0.5 sm:bottom-8 sm:right-6"
+  >
+    <img decoding="async" loading="lazy" src="{% static 'images/WhatsApp_idCBBZAMfN_1.svg' %}" alt="" width="20" height="20" class="h-5 w-5 shrink-0" />
+    <span class="hidden sm:inline">Chat with Studio</span>
+    <span class="sm:hidden">Chat</span>
+  </a>
+  {% endblock %}
+
+  <!-- FOOTER -->
+  {% include 'includes/footer.html' %}
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

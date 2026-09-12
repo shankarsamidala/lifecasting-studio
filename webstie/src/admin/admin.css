@@ -1,0 +1,20 @@
+/*
+ * Admin-only theme override. The public site's palette (rose/gold/cream,
+ * locked per CLAUDE.md) stays untouched in index.css — this scopes a
+ * Django-admin-style blue/white/gray palette to anything inside `.admin-theme`
+ * by overriding the same CSS variables Tailwind's utility classes already
+ * reference (bg-primary, text-text, border-ink-900/*, etc.), so no component
+ * markup needs to change.
+ */
+.admin-theme {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-accent: #2563eb;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f1f5f9;
+  --color-surface-tint: #dbeafe;
+  --color-text: #1f2937;
+  --color-text-muted: #64748b;
+  --color-ink-900: #1f2937;
+  --color-ink-700: #475569;
+}

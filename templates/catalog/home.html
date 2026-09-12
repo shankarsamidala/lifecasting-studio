@@ -1,0 +1,798 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lifecasting Studio — Premium Baby & Family Hand Casts, Keepsakes & Resin Art{% endblock %}
+
+{% block content %}
+
+<!-- 1. HERO SECTION (DYNAMIC INTERACTIVE CAROUSEL) -->
+<section class="hero-gradient relative overflow-hidden pt-0 pb-5 sm:pb-8 lg:py-24 border-b border-ink-900/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
+      
+      <!-- Hero Left Content -->
+      <div class="lg:col-span-7 space-y-0 lg:space-y-6 text-center lg:text-left">
+        
+        <!-- Eyebrow Tag -->
+        <span class="eyebrow hidden lg:block">Bangalore's Premier Lifecasting Studio</span>
+
+        <!-- Headline -->
+        <h1 class="sr-only lg:not-sr-only font-display text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-text leading-[1.12]">
+          Preserve your baby's <span class="text-brand italic font-normal">tiny moments</span> in 3D gold & silver
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="hidden lg:block font-sans text-sm sm:text-base text-text-muted max-w-xl mx-auto lg:mx-0 leading-relaxed">
+          Hypoallergenic, medical-grade hand & foot impressions, couple hand casts, and wedding garland resin keepsakes. Handcrafted in AECS Layout, Marathahalli with a 2-year color warranty.
+        </p>
+
+
+        <!-- MOBILE HERO CAROUSEL
+             One slide per active category, straight from the DB. Native CSS
+             scroll-snap: no library, real momentum scrolling, works with the
+             scrollbar hidden. Desktop shows the floating showcase instead. -->
+        <div class="lg:hidden" data-hero-carousel>
+          <div
+            class="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-0 overflow-x-auto sm:-mx-6 lg:-mx-8"
+            data-track
+            role="region"
+            aria-label="Browse keepsake categories"
+            tabindex="0"
+          >
+            {% for cat in all_categories %}
+              <a
+                href="{% url 'catalog:category_detail' category_slug=cat.slug %}"
+                class="relative block w-full shrink-0 snap-center overflow-hidden bg-surface-alt no-underline"
+                data-cat-slide
+              >
+                <div class="aspect-[5/6] w-full">
+                  <img
+                    src="{{ cat.get_display_image }}"
+                    alt="{{ cat.label }}"
+                    {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                    decoding="async"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
+                <div class="scrim absolute inset-x-0 bottom-0 px-5 pb-5 pt-12 text-left">
+                  <span class="block font-display text-xl font-semibold text-white">{{ cat.label }}</span>
+                  <span class="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-white">
+                    Explore
+                    <svg class="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+
+          <div class="mt-4 flex items-center justify-center gap-1.5" data-dots aria-hidden="true">
+            {% for cat in all_categories %}
+              <span class="h-1.5 w-1.5 rounded-full bg-ink-900/20 transition-all duration-300" data-dot></span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="hidden lg:flex pt-1 flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
+          <a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}" class="w-full sm:w-auto btn-primary shadow-lift shadow-primary/25">
+            Explore Collections
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+          <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hi!%20I'd%20like%20to%20inquire%20about%20a%20lifecasting%20session." target="_blank" rel="noopener" class="w-full sm:w-auto btn-secondary flex items-center justify-center gap-2">
+            <img decoding="async" loading="lazy" src="{% static 'images/WhatsApp_idCBBZAMfN_1.svg' %}" alt="WhatsApp" class="w-4 h-4 shrink-0" />
+            <span>Quick WhatsApp Inquiry</span>
+          </a>
+        </div>
+
+        <!-- Trust Stats Bar -->
+        <div class="hidden lg:grid pt-6 border-t border-ink-900/10 grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0 text-center lg:text-left">
+          <div class="space-y-0.5">
+            <p class="font-display font-semibold text-2xl sm:text-3xl text-primary">1,200+</p>
+            <p class="text-xs font-sans text-text-muted">Keepsakes Crafted</p>
+          </div>
+          <div class="space-y-0.5">
+            <p class="font-display font-semibold text-2xl sm:text-3xl text-primary">100%</p>
+            <p class="text-xs font-sans text-text-muted">Skin Safe Materials</p>
+          </div>
+          <div class="space-y-0.5">
+            <p class="font-display font-semibold text-2xl sm:text-3xl text-text-subtle">5.0 ★</p>
+            <p class="text-xs font-sans text-text-muted">Google Review Rating</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Hero Visual Right Showcase (desktop only — mobile uses the category carousel above) -->
+      <div class="hidden lg:block lg:col-span-5 relative">
+        <div class="relative mx-auto max-w-md lg:max-w-none">
+          
+          <!-- Frameless Floating Image Showcase Container -->
+          <div id="heroCarousel" class="relative rounded-2xl overflow-hidden shadow-lift shadow-ink-900/10 transition-all duration-700 hover:shadow-primary/15 group">
+            <div class="relative h-[400px] sm:h-[460px] rounded-2xl overflow-hidden bg-transparent">
+              
+              <!-- Slide 1: Baby Hand & Feet -->
+              <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-100 z-10" data-slide="0">
+                <img src="/static/images/hero/lcs-1.webp" alt="Baby Lifecasting Keepsake" fetchpriority="high" decoding="async" class="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105" />
+              </div>
+
+              <!-- Slide 2: Couple Hand Impression -->
+              <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0" data-slide="1">
+                <img decoding="async" loading="lazy" src="/static/images/gallery/two-2.webp" alt="Couple Hand Impression" class="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105" />
+              </div>
+
+              <!-- Slide 3: Family & Newborn Frame -->
+              <div class="hero-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0" data-slide="2">
+                <img decoding="async" loading="lazy" src="/static/images/gallery/2h2f-customized-5.webp" alt="Deluxe 3D Family Frame" class="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105" />
+              </div>
+
+              <!-- Carousel Arrow Triggers -->
+              <button type="button" onclick="prevHeroSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-surface/85 hover:bg-surface text-text shadow-rest border border-ink-900/10 flex items-center justify-center transition-all z-20 opacity-0 group-hover:opacity-100 font-semibold text-lg" aria-label="Previous slide">
+                ‹
+              </button>
+              <button type="button" onclick="nextHeroSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-surface/85 hover:bg-surface text-text shadow-rest border border-ink-900/10 flex items-center justify-center transition-all z-20 opacity-0 group-hover:opacity-100 font-semibold text-lg" aria-label="Next slide">
+                ›
+              </button>
+
+              <!-- Floating Bottom Dot Indicators -->
+              <div class="absolute bottom-4 left-0 right-0 z-20 flex justify-center items-center gap-2">
+                <button type="button" onclick="goToHeroSlide(0)" class="hero-dot-btn w-7 h-2 rounded-full bg-surface shadow-rest transition-all duration-300" aria-label="Slide 1" data-dot="0"></button>
+                <button type="button" onclick="goToHeroSlide(1)" class="hero-dot-btn w-2 h-2 rounded-full bg-surface/65 hover:bg-surface/85 transition-all duration-300" aria-label="Slide 2" data-dot="1"></button>
+                <button type="button" onclick="goToHeroSlide(2)" class="hero-dot-btn w-2 h-2 rounded-full bg-surface/65 hover:bg-surface/85 transition-all duration-300" aria-label="Slide 3" data-dot="2"></button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- 2. MINIMALIST WARRANTIES & TRUST STRIP -->
+<section class="hidden md:block py-7 sm:py-8 bg-surface border-b border-ink-900/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center md:text-left">
+      <div>
+        <p class="text-xs font-semibold text-text">2-Year Warranty</p>
+        <p class="text-xs text-text-muted">On casting paint & colors</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-text">100% Skin Safe</p>
+        <p class="text-xs text-text-muted">Medical grade organic plaster</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-text">Doorstep Service</p>
+        <p class="text-xs text-text-muted">Home visit across Bangalore</p>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-text">5-Star Studio</p>
+        <p class="text-xs text-text-muted">Top rated on Google Reviews</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- 3. NEW ARRIVALS — every product, newest first -->
+<section class="py-10 sm:py-16 lg:py-20 bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="mb-8">
+      <span class="eyebrow">Fresh from the Studio</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-text mt-2">New Arrivals</h2>
+      <p class="font-sans text-xs sm:text-sm text-text-muted mt-0.5">Every keepsake we cast, newest first</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
+      {% for m in all_models %}
+        <a
+          href="{% url 'catalog:product_detail' category_slug=m.category.slug model_slug=m.slug %}"
+          class="group bg-surface rounded-2xl border border-ink-900/10 shadow-rest overflow-hidden flex flex-col justify-between no-underline cursor-pointer transition-all duration-300 lg:hover:-translate-y-1 lg:hover:shadow-lift"
+        >
+          <div>
+            <div class="relative h-44 sm:h-52 lg:h-56 w-full overflow-hidden bg-surface-alt">
+              <img decoding="async" loading="lazy" src="{{ m.get_display_image }}" alt="{{ m.label }}" class="w-full h-full object-cover transition-transform duration-500 lg:group-hover:scale-105" />
+              {% if m.badge|upper == 'NEW' %}
+                <span class="absolute top-3 left-3 bg-primary text-white text-2xs font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-rest">
+                  {{ m.badge }}
+                </span>
+              {% endif %}
+            </div>
+
+            <div class="p-3 sm:p-4 space-y-1.5">
+              <span class="block truncate text-2xs sm:text-xs font-semibold uppercase tracking-wider text-text-subtle">{{ m.category.label }}</span>
+              <h3 class="font-display font-semibold text-sm sm:text-base text-text group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                {{ m.label }}
+              </h3>
+              {% if m.starting_price %}
+                <div class="pt-0.5 flex items-baseline gap-1.5 flex-wrap">
+                  <span class="font-display nums font-semibold text-base sm:text-lg text-primary">₹{{ m.starting_price }}</span>
+                  {% if m.strike_price %}
+                    <span class="nums text-xs text-text-muted line-through">₹{{ m.strike_price }}</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+      {% empty %}
+        <p class="col-span-full py-10 text-center text-text-muted">No products yet.</p>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+
+<!-- 4. SHOP BY CATEGORY (4 ITEMS PER ROW: 7 CATEGORIES + 8TH BLURRED IMAGE WITH +N OVERLAY) -->
+<section class="py-10 sm:py-16 lg:py-20 bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-2xl mx-auto mb-8 space-y-1">
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-text">Shop by Category</h2>
+      <p class="font-sans text-xs sm:text-sm text-text-muted">Select a category to view standard and customized designs</p>
+    </div>
+
+    <!-- 4-Column Grid (8 Items / 2 Rows of 4) -->
+    <ul
+      role="list"
+      class="m-0 mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 justify-items-center list-none p-0 max-w-5xl"
+    >
+      {% for cat in all_categories|slice:":7" %}
+        <li>
+          <a
+            href="{% url 'catalog:category_detail' category_slug=cat.slug %}"
+            class="group flex flex-col items-center gap-2 no-underline"
+          >
+            <span class="block aspect-square w-28 overflow-hidden {% if forloop.counter|divisibleby:2 %}rounded-cast-alt{% else %}rounded-cast{% endif %} shadow-rest ring-1 ring-ink-900/5 transition-all duration-500 group-hover:scale-105 group-hover:shadow-lift sm:w-36 lg:w-40">
+              {% if cat.models.first %}
+                <img decoding="async"
+                  src="{{ cat.models.first.get_display_image }}"
+                  alt="{{ cat.label }}"
+                  loading="lazy"
+                  class="h-full w-full object-cover"
+                />
+              {% else %}
+                <img decoding="async"
+                  src="/static/images/gallery/1h1f-standard.webp"
+                  alt="{{ cat.label }}"
+                  loading="lazy"
+                  class="h-full w-full object-cover"
+                />
+              {% endif %}
+            </span>
+            <span class="text-center font-sans text-xs leading-tight font-medium text-text transition-colors duration-300 group-hover:text-primary sm:text-sm">
+              {{ cat.label }}
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+
+      <!-- 8th Category Avatar: Soft Blurred Background Image with Overlay +N Count -->
+      {% if all_categories.count > 7 %}
+        {% with eighth_cat=all_categories.7 %}
+          <li>
+            <a
+              href="{% url 'catalog:category_detail' category_slug=eighth_cat.slug %}"
+              class="group flex flex-col items-center gap-2 no-underline"
+            >
+              <span class="relative block aspect-square w-28 sm:w-36 lg:w-40 overflow-hidden rounded-cast shadow-rest ring-2 ring-ink-900/10 transition-all duration-500 group-hover:scale-105 group-hover:shadow-lift">
+                {% if eighth_cat.models.first %}
+                  <img decoding="async"
+                    src="{{ eighth_cat.models.first.get_display_image }}"
+                    alt="{{ eighth_cat.label }}"
+                    loading="lazy"
+                    class="h-full w-full object-cover blur-[1px] scale-105 opacity-85"
+                  />
+                {% else %}
+                  <img decoding="async"
+                    src="/static/images/gallery/two-1.webp"
+                    alt="{{ eighth_cat.label }}"
+                    loading="lazy"
+                    class="h-full w-full object-cover blur-[1px] scale-105 opacity-85"
+                  />
+                {% endif %}
+                <span class="absolute inset-0 bg-ink-900/40 backdrop-blur-[1px] flex items-center justify-center font-display text-2xl sm:text-3xl font-semibold text-white shadow-inner">
+                  +{{ all_categories.count|add:"-7" }}
+                </span>
+              </span>
+              <span class="text-center font-sans text-xs leading-tight font-semibold text-primary sm:text-sm">
+                +{{ all_categories.count|add:"-7" }} More
+              </span>
+            </a>
+          </li>
+        {% endwith %}
+      {% endif %}
+    </ul>
+
+  </div>
+</section>
+
+
+<!-- 5. POPULAR LIFECASTING MODELS -->
+<section class="py-10 sm:py-16 lg:py-20 bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="mb-8">
+      <div>
+        <span class="eyebrow">Curated Best-Sellers</span>
+        <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-text mt-2">Popular Lifecasting Models</h2>
+        <p class="font-sans text-xs sm:text-sm text-text-muted mt-0.5">Handcrafted 3D keepsakes for families, couples, and newborn babies</p>
+      </div>
+    </div>
+
+    <!-- Horizontal snap track on mobile, 4-column grid on desktop -->
+    <div class="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-5 lg:px-0 lg:overflow-visible">
+      {% for m in featured_models|slice:":4" %}
+        <a
+          href="{% url 'catalog:product_detail' category_slug=m.category.slug model_slug=m.slug %}"
+          class="group glass-card glass-card-hover w-[74%] max-w-[300px] shrink-0 snap-start rounded-2xl overflow-hidden flex flex-col justify-between bg-surface shadow-rest border border-ink-900/10 no-underline cursor-pointer transition-all duration-300 lg:hover:-translate-y-1 lg:hover:shadow-lift sm:w-[300px] lg:w-full lg:max-w-none lg:shrink-0"
+        >
+          <div>
+            <div class="relative h-64 sm:h-72 w-full overflow-hidden bg-surface-alt">
+              <img decoding="async" loading="lazy" src="{{ m.get_display_image }}" alt="{{ m.label }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              {% if m.badge %}
+                <span class="absolute top-3 left-3 bg-primary text-white text-2xs font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide shadow-rest">
+                  {{ m.badge }}
+                </span>
+              {% endif %}
+            </div>
+
+            <div class="p-4 space-y-2.5">
+              <div class="flex items-center justify-between text-xs text-text-muted">
+                <span class="font-semibold text-text-subtle uppercase tracking-wider text-xs">{{ m.category.label }}</span>
+                <span class="text-text font-semibold flex items-center gap-0.5">
+                  ★ {{ m.rating }} <span class="text-text-muted font-normal text-xs">({{ m.review_count }})</span>
+                </span>
+              </div>
+
+              <h3 class="font-display font-semibold text-base text-text group-hover:text-primary transition-colors line-clamp-1">
+                {{ m.label }}
+              </h3>
+
+              <div class="pt-0.5 flex items-baseline gap-2 flex-wrap">
+                {% if m.starting_price %}
+                  <span class="font-display font-semibold text-lg text-primary">₹{{ m.starting_price }}</span>
+                  {% if m.strike_price %}
+                    <span class="text-xs text-text-muted line-through">₹{{ m.strike_price }}</span>
+                    {% if m.savings_amount %}
+                      <span class="bg-success-wash text-success text-xs font-semibold px-2 py-0.5 rounded-full">
+                        Save ₹{{ m.savings_amount }}
+                      </span>
+                    {% endif %}
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Centered View Options Button -->
+          <div class="px-4 pb-4 pt-0">
+            <div class="w-full py-2 px-3.5 rounded-xl bg-surface-alt group-hover:bg-primary group-hover:text-white text-text text-xs font-semibold flex items-center justify-center gap-1.5 transition-all duration-300 border border-ink-900/5">
+              <span>View Options</span>
+              <svg class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+              </svg>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <!-- Section CTA sits after the cards, so the track is what you meet first. -->
+    <div class="mt-8 flex justify-center">
+      <a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}" class="btn-primary w-full sm:w-auto">
+        Explore All Models
+        <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- 5. THE CRAFTSMANSHIP PROCESS (HOW WE CREATE YOUR LIFECAST) -->
+<section class="py-12 sm:py-20 lg:py-24 bg-surface">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <header class="space-y-3 text-center">
+      <span class="eyebrow">Step-by-Step Experience</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-text">
+        How We Create Your Lifecast
+      </h2>
+      <p class="text-text-muted mx-auto max-w-xl text-xs sm:text-sm leading-relaxed">
+        A gentle 5-minute molding session resulting in an archival heirloom. Explore how our master artisans handcraft your 3D keepsake.
+      </p>
+    </header>
+
+    <!-- Cards Grid (Redesigned per UI pattern) -->
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 md:mt-10">
+      
+      <!-- Step 01 -->
+      <a
+        href="{% url 'catalog:faq_help_center' %}"
+        class="group/card flex flex-col justify-between rounded-2xl p-6 bg-surface border border-ink-900/10 no-underline shadow-rest transition-all duration-300 hover:border-primary hover:shadow-lift"
+      >
+        <div class="flex flex-col gap-4">
+          <div class="cast-marker shrink-0">
+            01
+          </div>
+          <div class="space-y-1">
+            <h3 class="font-display text-lg font-semibold text-text">5-Min Gentle Impression</h3>
+            <p class="text-text-muted text-sm leading-relaxed">
+              Visit our studio in AECS Layout Marathahalli or request a doorstep home visit. Our organic, medical-grade impression material takes only 3 to 5 minutes with zero baby discomfort.
+            </p>
+          </div>
+        </div>
+        <span class="mt-6 inline-flex h-9 w-fit shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand px-4 text-sm font-semibold text-white transition-colors duration-300 group-hover/card:bg-primary-hover">
+          <span>Explore Safety</span>
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 18l6-6-6-6"/></svg>
+        </span>
+      </a>
+
+      <!-- Step 02 -->
+      <a
+        href="{% url 'catalog:category_detail' category_slug='baby-casting' %}"
+        class="group/card flex flex-col justify-between rounded-2xl p-6 bg-surface border border-ink-900/10 no-underline shadow-rest transition-all duration-300 hover:border-primary hover:shadow-lift"
+      >
+        <div class="flex flex-col gap-4">
+          <div class="cast-marker shrink-0">
+            02
+          </div>
+          <div class="space-y-1">
+            <h3 class="font-display text-lg font-semibold text-text">Artisan Detailing & Finishing</h3>
+            <p class="text-text-muted text-sm leading-relaxed">
+              Our master artists precision-finish every line, crease, and fingerprint in metallic gold, silver, or bronze lacquer backed by a 2-year color warranty.
+            </p>
+          </div>
+        </div>
+        <span class="mt-6 inline-flex h-9 w-fit shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand px-4 text-sm font-semibold text-white transition-colors duration-300 group-hover/card:bg-primary-hover">
+          <span>View Finishes</span>
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 18l6-6-6-6"/></svg>
+        </span>
+      </a>
+
+      <!-- Step 03 -->
+      <a
+        href="{% url 'catalog:shipping_policy' %}"
+        class="group/card flex flex-col justify-between rounded-2xl p-6 bg-surface border border-ink-900/10 no-underline shadow-rest transition-all duration-300 hover:border-primary hover:shadow-lift"
+      >
+        <div class="flex flex-col gap-4">
+          <div class="cast-marker shrink-0">
+            03
+          </div>
+          <div class="space-y-1">
+            <h3 class="font-display text-lg font-semibold text-text">Custom Framing & Delivery</h3>
+            <p class="text-text-muted text-sm leading-relaxed">
+              Your customized 3D display box is completed within 3 to 4 weeks. Collect directly in studio or schedule doorstep porter delivery across Bengaluru.
+            </p>
+          </div>
+        </div>
+        <span class="mt-6 inline-flex h-9 w-fit shrink-0 items-center justify-center gap-1.5 rounded-full bg-brand px-4 text-sm font-semibold text-white transition-colors duration-300 group-hover/card:bg-primary-hover">
+          <span>Delivery Options</span>
+          <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 18l6-6-6-6"/></svg>
+        </span>
+      </a>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- 6. CLIENT STORIES & GOOGLE REVIEWS (COMMUNITY TESTIMONIAL SLIDER DESIGN) -->
+<section class="py-10 sm:py-16 lg:py-20 bg-surface overflow-hidden">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header class="flex max-w-2xl flex-col space-y-2.5">
+      <span class="eyebrow">Community &amp; Reviews</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-text">
+        We believe in the power of community
+      </h2>
+      <p class="font-sans text-xs sm:text-sm text-text-muted leading-relaxed">
+        Our goal is to preserve your most precious family moments with extreme perfection. Here is what parents across Bengaluru have to say about our 3D impressions and studio service.
+      </p>
+      <a
+        href="{{ site_settings.view_all_reviews_href }}"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center justify-center gap-2 rounded-full bg-primary hover:bg-primary-hover text-white text-xs font-semibold px-4 py-2 w-fit shadow-rest transition-all duration-300 hover:scale-105"
+      >
+        <span>Read all Google reviews</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+    </header>
+
+    <!-- Horizontal Auto-Scroll Cards Track Contained inside Container (With Space on Top) -->
+    <div id="reviewsTrack" class="mt-8 sm:mt-10 overflow-x-auto pb-1 pt-1 scrollbar-none no-scrollbar">
+      <div class="flex gap-4 w-max">
+        {% for item in testimonials %}
+          <div class="w-72 sm:w-80 shrink-0 flex flex-col justify-between overflow-hidden rounded-2xl bg-surface p-5 border border-ink-900/10 shadow-rest transition-all duration-300 hover:border-ink-900/10 hover:shadow-rest">
+            <div class="space-y-3">
+              
+              <!-- 5-Star Rating SVGs -->
+              <div class="flex items-center gap-1" aria-label="5 out of 5 stars">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+              </div>
+
+              <!-- Quote with 3-line cutoff & expand option -->
+              <div>
+                <p class="review-quote text-text-muted text-xs sm:text-sm leading-relaxed line-clamp-3 transition-all duration-300 font-sans">
+                  "{{ item.quote }}"
+                </p>
+                <button
+                  type="button"
+                  onclick="toggleReview(this)"
+                  class="mt-1.5 text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1 focus:outline-none transition-colors"
+                >
+                  <span>More</span>
+                  <svg class="w-3 h-3 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Customer Info Footer -->
+            <div class="flex items-center gap-2.5 pt-4 mt-3 border-t border-ink-900/5">
+              {% if item.avatar_url %}
+                <img decoding="async" loading="lazy" src="{{ item.avatar_url }}" alt="{{ item.name }}" class="w-9 h-9 rounded-full object-cover shrink-0 border border-ink-900/10" />
+              {% else %}
+                <div class="w-9 h-9 rounded-full bg-surface-alt border border-ink-900/10 text-text-subtle font-display text-xs font-semibold flex items-center justify-center shrink-0">
+                  {{ item.name|slice:":1" }}
+                </div>
+              {% endif %}
+
+              <div class="flex flex-col space-y-0.5 min-w-0">
+                <span class="leading-4 font-medium tracking-tight text-text truncate text-xs sm:text-sm flex items-center gap-1">
+                  {{ item.name }}
+                  <span class="text-success text-xs font-semibold" title="Verified Google Review">✓</span>
+                </span>
+                <span class="text-xs leading-4 tracking-tight text-text-muted opacity-70 truncate">
+                  {{ item.category }} • Google Review
+                </span>
+              </div>
+            </div>
+
+          </div>
+        {% endfor %}
+
+        <!-- Duplicate Loop for Infinite Auto-Scroll Seamlessness -->
+        {% for item in testimonials %}
+          <div class="w-72 sm:w-80 shrink-0 flex flex-col justify-between overflow-hidden rounded-2xl bg-surface p-5 border border-ink-900/10 shadow-rest transition-all duration-300 hover:border-ink-900/10 hover:shadow-rest" aria-hidden="true">
+            <div class="space-y-3">
+              
+              <!-- 5-Star Rating SVGs -->
+              <div class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="text-text"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+              </div>
+
+              <!-- Quote with 3-line cutoff & expand option -->
+              <div>
+                <p class="review-quote text-text-muted text-xs sm:text-sm leading-relaxed line-clamp-3 transition-all duration-300 font-sans">
+                  "{{ item.quote }}"
+                </p>
+                <button
+                  type="button"
+                  onclick="toggleReview(this)"
+                  class="mt-1.5 text-xs font-semibold text-primary hover:text-primary-hover flex items-center gap-1 focus:outline-none transition-colors"
+                >
+                  <span>More</span>
+                  <svg class="w-3 h-3 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Customer Info Footer -->
+            <div class="flex items-center gap-2.5 pt-4 mt-3 border-t border-ink-900/5">
+              {% if item.avatar_url %}
+                <img decoding="async" loading="lazy" src="{{ item.avatar_url }}" alt="{{ item.name }}" class="w-9 h-9 rounded-full object-cover shrink-0 border border-ink-900/10" />
+              {% else %}
+                <div class="w-9 h-9 rounded-full bg-surface-alt border border-ink-900/10 text-text-subtle font-display text-xs font-semibold flex items-center justify-center shrink-0">
+                  {{ item.name|slice:":1" }}
+                </div>
+              {% endif %}
+
+              <div class="flex flex-col space-y-0.5 min-w-0">
+                <span class="leading-4 font-medium tracking-tight text-text truncate text-xs sm:text-sm flex items-center gap-1">
+                  {{ item.name }}
+                  <span class="text-success text-xs font-semibold" title="Verified Google Review">✓</span>
+                </span>
+                <span class="text-xs leading-4 tracking-tight text-text-muted opacity-70 truncate">
+                  {{ item.category }} • Google Review
+                </span>
+              </div>
+            </div>
+
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // --- Hero Carousel Controller ---
+  let currentHeroIndex = 0;
+  const slides = document.querySelectorAll('.hero-slide');
+  let heroTimer = null;
+
+  function showHeroSlide(index) {
+    slides.forEach((slide, idx) => {
+      if (idx === index) {
+        slide.classList.remove('opacity-0', 'z-0');
+        slide.classList.add('opacity-100', 'z-10');
+      } else {
+        slide.classList.remove('opacity-100', 'z-10');
+        slide.classList.add('opacity-0', 'z-0');
+      }
+    });
+
+    const dotBtns = document.querySelectorAll('.hero-dot-btn');
+    dotBtns.forEach((dot, idx) => {
+      if (idx === index) {
+        dot.className = 'hero-dot-btn w-7 h-2 rounded-full bg-surface shadow-rest transition-all duration-300';
+      } else {
+        dot.className = 'hero-dot-btn w-2 h-2 rounded-full bg-surface/65 hover:bg-surface/85 transition-all duration-300';
+      }
+    });
+
+    currentHeroIndex = index;
+  }
+
+  function nextHeroSlide() {
+    let nextIdx = (currentHeroIndex + 1) % slides.length;
+    showHeroSlide(nextIdx);
+  }
+
+  function prevHeroSlide() {
+    let prevIdx = (currentHeroIndex - 1 + slides.length) % slides.length;
+    showHeroSlide(prevIdx);
+  }
+
+  function goToHeroSlide(idx) {
+    showHeroSlide(idx);
+    resetHeroTimer();
+  }
+
+  function startHeroTimer() {
+    heroTimer = setInterval(nextHeroSlide, 4500);
+  }
+
+  function resetHeroTimer() {
+    clearInterval(heroTimer);
+    startHeroTimer();
+  }
+
+  const carouselEl = document.getElementById('heroCarousel');
+  if (carouselEl) {
+    carouselEl.addEventListener('mouseenter', () => clearInterval(heroTimer));
+    carouselEl.addEventListener('mouseleave', () => startHeroTimer());
+  }
+
+  startHeroTimer();
+
+  // --- Review Quote Expand / Collapse ---
+  function toggleReview(btn) {
+    const quoteEl = btn.previousElementSibling;
+    const labelSpan = btn.querySelector('span');
+    const svgIcon = btn.querySelector('svg');
+
+    if (quoteEl.classList.contains('line-clamp-3')) {
+      quoteEl.classList.remove('line-clamp-3');
+      labelSpan.innerText = 'Less';
+      svgIcon.classList.add('rotate-180');
+    } else {
+      quoteEl.classList.add('line-clamp-3');
+      labelSpan.innerText = 'More';
+      svgIcon.classList.remove('rotate-180');
+    }
+  }
+
+  // --- Reviews Auto-Scroll Controller ---
+  const reviewsTrack = document.getElementById('reviewsTrack');
+  if (reviewsTrack) {
+    let isHovered = false;
+    let autoScrollSpeed = 0.25; // Gentle, relaxed scroll speed in px per frame
+
+    function stepReviewsAutoScroll() {
+      if (!isHovered && reviewsTrack) {
+        reviewsTrack.scrollLeft += autoScrollSpeed;
+        const halfContentWidth = reviewsTrack.scrollWidth / 2;
+        if (reviewsTrack.scrollLeft >= halfContentWidth) {
+          reviewsTrack.scrollLeft = 0;
+        }
+      }
+      requestAnimationFrame(stepReviewsAutoScroll);
+    }
+
+    reviewsTrack.addEventListener('mouseenter', () => { isHovered = true; });
+    reviewsTrack.addEventListener('mouseleave', () => { isHovered = false; });
+    reviewsTrack.addEventListener('touchstart', () => { isHovered = true; }, { passive: true });
+    reviewsTrack.addEventListener('touchend', () => { isHovered = false; }, { passive: true });
+
+    requestAnimationFrame(stepReviewsAutoScroll);
+  }
+
+  // --- Mobile Hero Category Carousel ---
+  // Scrolling is native CSS scroll-snap; this only syncs the dots and
+  // auto-advances. It never fights the user: any touch, wheel, keyboard or
+  // focus interaction stops autoplay permanently.
+  const heroCarousel = document.querySelector('[data-hero-carousel]');
+  if (heroCarousel) {
+    const track = heroCarousel.querySelector('[data-track]');
+    const slides = Array.from(heroCarousel.querySelectorAll('[data-cat-slide]'));
+    const dots = Array.from(heroCarousel.querySelectorAll('[data-dot]'));
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let current = 0;
+    let autoplayId = null;
+
+    function paintDots(index) {
+      dots.forEach((dot, i) => {
+        const active = i === index;
+        dot.classList.toggle('w-5', active);
+        dot.classList.toggle('bg-primary', active);
+        dot.classList.toggle('w-1.5', !active);
+        dot.classList.toggle('bg-ink-900/20', !active);
+      });
+    }
+
+    // Which slide is centred drives the dots, so they stay correct whether the
+    // move came from autoplay or the user's thumb.
+    if ('IntersectionObserver' in window && slides.length) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            current = slides.indexOf(entry.target);
+            paintDots(current);
+          }
+        });
+      }, { root: track, threshold: 0.6 });
+      slides.forEach((slide) => observer.observe(slide));
+    }
+
+    function stopAutoplay() {
+      if (autoplayId !== null) { clearInterval(autoplayId); autoplayId = null; }
+    }
+
+    function startAutoplay() {
+      if (reduceMotion || slides.length < 2) return;
+      stopAutoplay();
+      autoplayId = setInterval(() => {
+        if (document.hidden) return;
+        current = (current + 1) % slides.length;
+        track.scrollTo({ left: slides[current].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+      }, 4000);
+    }
+
+    ['touchstart', 'wheel', 'keydown', 'focusin'].forEach((evt) => {
+      track.addEventListener(evt, stopAutoplay, { passive: true, once: true });
+    });
+
+    paintDots(0);
+    startAutoplay();
+  }
+</script>
+{% endblock %}
+
+
+

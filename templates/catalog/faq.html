@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Help Center & Frequently Asked Questions — Lifecasting Studio{% endblock %}
+
+{% block content %}
+<div class="py-16 sm:py-20 bg-surface">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Page Header -->
+    <div class="text-center max-w-3xl mx-auto mb-14 space-y-3">
+      <span class="eyebrow">Help Center &amp; Support</span>
+      <h1 class="font-display text-4xl sm:text-5xl font-semibold text-text">Frequently Asked Questions</h1>
+      <p class="font-sans text-base text-text-muted leading-relaxed">
+        Everything you need to know about our 3D impressions, doorstep visits across Bengaluru, ordering process, and 2-year warranty.
+      </p>
+    </div>
+
+    <!-- Main 2-Column Help Layout (33% Sticky Sidebar TOC + 67% Categorized Accordions) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      
+      <!-- Left Column: Sticky Table of Contents (33% width / lg:col-span-4) -->
+      <aside class="lg:col-span-4 sticky top-28 space-y-6">
+        <div class="p-6 rounded-2xl bg-surface border border-ink-900/10 shadow-rest">
+          <h2 class="font-display font-semibold text-lg text-text border-b border-ink-900/10 pb-3 mb-4">
+            Help Categories
+          </h2>
+          <nav id="faqTocNav" class="space-y-1">
+            <a
+              href="#common-questions"
+              class="toc-link block px-4 py-2.5 rounded-xl text-sm font-semibold text-primary bg-primary/10 transition-all"
+            >
+              1. Most common questions
+            </a>
+            <a
+              href="#my-order"
+              class="toc-link block px-4 py-2.5 rounded-xl text-sm font-medium text-text-muted hover:text-primary hover:bg-surface-alt transition-all"
+            >
+              2. My order & booking
+            </a>
+            <a
+              href="#delivery"
+              class="toc-link block px-4 py-2.5 rounded-xl text-sm font-medium text-text-muted hover:text-primary hover:bg-surface-alt transition-all"
+            >
+              3. Delivery & Home Visits
+            </a>
+            <a
+              href="#payment"
+              class="toc-link block px-4 py-2.5 rounded-xl text-sm font-medium text-text-muted hover:text-primary hover:bg-surface-alt transition-all"
+            >
+              4. Payment & Pricing
+            </a>
+            <a
+              href="#warranty"
+              class="toc-link block px-4 py-2.5 rounded-xl text-sm font-medium text-text-muted hover:text-primary hover:bg-surface-alt transition-all"
+            >
+              5. Care & Warranty
+            </a>
+          </nav>
+        </div>
+
+        <!-- Quick Studio Support Card -->
+        <div class="p-6 rounded-2xl bg-surface-alt border border-ink-900/10 space-y-3">
+          <h3 class="font-display font-semibold text-base text-text">Need immediate assistance?</h3>
+          <p class="text-xs text-text-muted leading-relaxed">
+            Our team in AECS Layout Marathahalli is available daily from 9:00 AM to 8:00 PM for custom inquiries and home visit bookings.
+          </p>
+          <a
+            href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hi!%20I%20have%20a%20question%20about%20my%20lifecasting%20order."
+            target="_blank"
+            rel="noopener"
+            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full border border-ink-900/15 bg-surface hover:bg-surface-alt text-text hover:text-primary-hover font-sans text-sm font-semibold shadow-rest transition-colors duration-300"
+          >
+            <img decoding="async" loading="lazy" src="{% static 'images/WhatsApp_idCBBZAMfN_1.svg' %}" alt="WhatsApp" class="w-4 h-4 shrink-0" />
+            <span>Chat on WhatsApp</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Right Column: Accordion Content Sections (67% width / lg:col-span-8) -->
+      <main class="lg:col-span-8 space-y-12">
+        
+        <!-- Category 1: Most Common Questions -->
+        <section id="common-questions" class="scroll-mt-28 space-y-4">
+          <div class="border-b border-ink-900/10 pb-3">
+            <h2 class="font-display text-2xl font-semibold text-text">1. Most Common Questions</h2>
+            <p class="text-xs text-text-muted mt-1">General queries about impression safety and overall experience</p>
+          </div>
+
+          <div class="space-y-4">
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden" open>
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>Is the casting material 100% safe for newborn baby skin?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Yes, absolutely! We use medical-grade, organic seaweed-based alginate material imported specifically for infant impressions. It is 100% non-toxic, hypoallergenic, and gentle even on day-old babies.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>How long does the impression taking session take?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                The actual mold impression takes only 3 to 5 minutes per hand or foot! The total appointment (including selecting frame models, colors, and nameplate details) takes approximately 30 to 45 minutes.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>What if my baby moves during the impression molding?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Our artists are expert specialists in working with infants. The material sets quickly within 2 minutes. If a baby moves excessively and disrupts the mold, we simply redo the impression free of charge during the session until we achieve perfect detail.
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- Category 2: My Order & Booking -->
+        <section id="my-order" class="scroll-mt-28 space-y-4">
+          <div class="border-b border-ink-900/10 pb-3">
+            <h2 class="font-display text-2xl font-semibold text-text">2. My Order & Booking</h2>
+            <p class="text-xs text-text-muted mt-1">Questions regarding booking confirmation, custom requests, and changes</p>
+          </div>
+
+          <div class="space-y-4">
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>How do I check if my session booking has been placed?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Once you submit a booking request on our website or directly via WhatsApp, our studio manager will confirm your appointment slot and send an instant WhatsApp booking summary along with location coordinates or doorstep artist details.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>Can I customize the frame finish, background color, or name engraving?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Yes! Every keepsake is completely bespoke. You can choose from champagne metallic gold, antique silver, or warm bronze lacquer, coupled with your choice of background fabric, LED illumination, and customized name & birth date metal plaques.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>Can I reschedule my appointment slot?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                We understand that baby sleep schedules can change! You can reschedule your appointment slot at least 24 hours prior to your scheduled time by messaging us on WhatsApp.
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- Category 3: Delivery & Home Visits -->
+        <section id="delivery" class="scroll-mt-28 space-y-4">
+          <div class="border-b border-ink-900/10 pb-3">
+            <h2 class="font-display text-2xl font-semibold text-text">3. Delivery & Home Visits</h2>
+            <p class="text-xs text-text-muted mt-1">Information regarding doorstep home visits and final product dispatch</p>
+          </div>
+
+          <div class="space-y-4">
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>How does the doorstep home visit service work in Bengaluru?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Our trained studio artist visits your residence across Bengaluru (Whitefield, Indiranagar, Koramangala, Sarjapur, HSR Layout, Yelahanka, etc.) equipped with sterile impression kits and sample frames so you don't have to step out with your newborn.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>When will my completed 3D framed keepsake be ready?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Hand-cured casting, multi-stage sanding, metallic lacquering, and custom glass framing require 3 to 4 weeks for complete drying and finishing to guarantee longevity.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>Can I collect my finished display box directly from the studio?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Yes! You can collect your finished frame in person at our studio in AECS Layout, Marathahalli, or opt for direct doorstep porter delivery in protective wooden crating.
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- Category 4: Payment & Pricing -->
+        <section id="payment" class="scroll-mt-28 space-y-4">
+          <div class="border-b border-ink-900/10 pb-3">
+            <h2 class="font-display text-2xl font-semibold text-text">4. Payment & Pricing</h2>
+            <p class="text-xs text-text-muted mt-1">Information on accepted payment methods, advances, and invoices</p>
+          </div>
+
+          <div class="space-y-4">
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>What payment options do you accept?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                We accept Google Pay, PhonePe, Paytm, All UPI apps, Credit/Debit cards, NetBanking, and Cash at studio.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>Do I have to pay full price at the time of the impression?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                No, a 50% advance is collected at the time of taking the impression. The remaining 50% balance is payable upon delivery/collection of the finished framed keepsake.
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- Category 5: Care & Warranty -->
+        <section id="warranty" class="scroll-mt-28 space-y-4">
+          <div class="border-b border-ink-900/10 pb-3">
+            <h2 class="font-display text-2xl font-semibold text-text">5. Care & Warranty</h2>
+            <p class="text-xs text-text-muted mt-1">Details about our 2-Year Color Warranty and preservation tips</p>
+          </div>
+
+          <div class="space-y-4">
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>What does the 2-Year Color Warranty cover?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Our 2-Year Color Warranty covers any unnatural fading, chipping, or tarnish of the metallic lacquer coating on the 3D castings under indoor household conditions.
+              </div>
+            </details>
+
+            <details class="group rounded-2xl border border-ink-900/10 overflow-hidden bg-surface transition-all duration-300 open:border-ink-900/10 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-6 text-text font-display font-semibold text-base sm:text-lg select-none bg-surface group-open:bg-surface-alt transition-colors">
+                <span>How should I clean and preserve the shadow box frame?</span>
+                <span class="w-8 h-8 rounded-full bg-surface-alt text-primary font-semibold flex items-center justify-center shrink-0 transition-transform duration-300 group-open:rotate-180">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </span>
+              </summary>
+              <div class="p-6 pt-4 border-t border-ink-900/10 text-sm font-sans text-text-muted leading-relaxed">
+                Wipe the outer glass with a soft micro-fiber cloth. Avoid exposing the frame to direct sunlight or heavy moisture walls.
+              </div>
+            </details>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Scroll spy & active link controller for Table of Contents
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('main section');
+    const navLinks = document.querySelectorAll('#faqTocNav .toc-link');
+
+    function highlightToc() {
+      let scrollPos = window.scrollY + 140;
+
+      sections.forEach(sec => {
+        let top = sec.offsetTop;
+        let height = sec.offsetHeight;
+        let id = sec.getAttribute('id');
+
+        if (scrollPos >= top && scrollPos < top + height) {
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('text-primary', 'bg-primary/10', 'font-semibold');
+              link.classList.remove('text-text-muted', 'font-medium');
+            } else {
+              link.classList.remove('text-primary', 'bg-primary/10', 'font-semibold');
+              link.classList.add('text-text-muted', 'font-medium');
+            }
+          });
+        }
+      });
+    }
+
+    window.addEventListener('scroll', highlightToc);
+  });
+</script>
+{% endblock %}

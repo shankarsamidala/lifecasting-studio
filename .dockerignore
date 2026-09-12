@@ -1,0 +1,56 @@
+# Anything not listed here is sent to the build daemon as context, so the
+# heavy directories matter: venv (114M), webstie (449M) and .bin (47M) alone
+# would make the build slow and the image enormous.
+
+# Virtualenv — the image installs from requirements.txt instead
+venv/
+.venv/
+env/
+
+# The React app is a separate project, not part of the Django deploy
+webstie/
+
+# Tailwind CLI binary: downloaded fresh in the builder stage for linux
+.bin/
+
+# Secrets. Cloud Run injects these from Secret Manager; a .env baked into an
+# image is readable by anyone who can pull it.
+.env
+.env.*
+!.env.example
+
+# Local database — production uses Supabase
+db.sqlite3
+*.sqlite3
+
+# Pre-optimisation source images, kept for re-encoding only
+assets/originals/
+
+# Build output: regenerated inside the image so it can never be stale
+staticfiles/
+
+# Runtime uploads — these belong in object storage, not the image
+media/
+
+# Python noise
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Tooling / editor
+.git/
+.gitignore
+.github/
+.claude/
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Docs
+docs/
+README.md
+*.md

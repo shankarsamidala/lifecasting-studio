@@ -1,0 +1,130 @@
+{% load static %}
+<footer class="border-t border-ink-900/10 bg-surface text-text">
+  <div class="mx-auto max-w-7xl px-6 py-10 sm:py-14 lg:px-12 lg:py-16">
+    <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-12">
+
+      <!-- Brand. The studio address lives on the Contact page, which this
+           column points to, rather than being repeated on every screen. -->
+      <div class="lg:col-span-4">
+        <h2 class="site-logo site-logo--lg">
+          <img src="{% static 'images/logo.webp' %}" alt="" width="46" height="40" loading="lazy" decoding="async" class="site-logo__mark" />
+          <span class="site-logo__text">Lifecasting <span class="text-primary">Studio</span></span>
+        </h2>
+        <p class="mt-3 max-w-xs font-sans text-sm leading-relaxed text-text-muted">
+          {{ footer_settings.tagline }}
+        </p>
+        <a
+          href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hi!%20I'd%20like%20to%20book%20a%20lifecasting%20session."
+          target="_blank"
+          rel="noopener"
+          class="btn-primary mt-6"
+        >
+          Book a session
+        </a>
+      </div>
+
+      <!-- Services -->
+      <div class="lg:col-span-3">
+        <h3 class="font-display text-lg font-semibold text-primary">Our services</h3>
+        <ul role="list" class="m-0 mt-4 flex list-none flex-col gap-2.5 p-0">
+          {% for cat in all_categories|slice:":6" %}
+            <li>
+              <a
+                href="{% url 'catalog:category_detail' category_slug=cat.slug %}"
+                class="font-sans text-sm text-text-muted no-underline transition-colors duration-300 hover:text-primary"
+              >
+                {{ cat.label }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Hours -->
+      <div class="lg:col-span-2">
+        <h3 class="font-display text-lg font-semibold text-primary">Studio hours</h3>
+        <dl class="m-0 mt-4 flex flex-col gap-2.5 font-sans text-sm">
+          {% for entry in footer_settings.business_hours %}
+            <div class="flex flex-col gap-0.5">
+              <dt class="font-medium text-text">{{ entry.label }}</dt>
+              <dd class="m-0 nums text-text-muted">{{ entry.hours }}</dd>
+            </div>
+          {% endfor %}
+        </dl>
+      </div>
+
+      <!-- Contact, with the social links living here rather than in their
+           own column — they are another way to reach the studio. -->
+      <div class="lg:col-span-3">
+        <h3 class="font-display text-lg font-semibold text-primary">Get in touch</h3>
+        <div class="mt-4 flex flex-col gap-4">
+          <div>
+            <p class="m-0 font-sans text-sm text-text-subtle">Phone</p>
+            <a
+              href="{{ footer_settings.phone_href }}"
+              class="font-sans text-sm font-medium nums text-text no-underline transition-colors duration-300 hover:text-primary"
+            >
+              {{ footer_settings.phone }}
+            </a>
+          </div>
+          <div>
+            <p class="m-0 font-sans text-sm text-text-subtle">Email</p>
+            <a
+              href="mailto:{{ footer_settings.email }}"
+              class="font-sans text-sm font-medium break-all text-text no-underline transition-colors duration-300 hover:text-primary"
+            >
+              {{ footer_settings.email }}
+            </a>
+          </div>
+          <a
+            href="{% url 'catalog:contact' %}"
+            class="inline-flex w-fit items-center gap-1.5 font-sans text-sm font-semibold text-primary no-underline transition-colors duration-300 hover:text-primary-hover"
+          >
+            Visit the studio
+            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+
+          {% if footer_settings.social_links %}
+            <div class="mt-1 flex gap-2.5">
+              {% for social in footer_settings.social_links %}
+                <a
+                  href="{{ social.href }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="{{ social.label }}"
+                  class="group flex h-10 w-10 items-center justify-center rounded-full border border-ink-900/15 bg-surface transition-colors duration-300 hover:border-ink-900 hover:bg-ink-900"
+                >
+                  <svg class="h-4 w-4 text-text transition-colors group-hover:text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    {% if social.icon == 'instagram' %}
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.256 1.216.6 1.772 1.153a4.908 4.908 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428.048 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 0 1-1.153 1.772 4.915 4.915 0 0 1-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.048-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.904 4.904 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 0 1 1.153-1.772A4.897 4.897 0 0 1 5.45 2.525c.638-.248 1.362-.415 2.428-.465C8.944 2.013 9.283 2 12 2Zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm6.5-.25a1.25 1.25 0 0 0-2.5 0 1.25 1.25 0 0 0 2.5 0ZM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z" />
+                    {% elif social.icon == 'facebook' %}
+                      <path d="M13.5 22v-8h2.7l.4-3.3h-3.1V8.6c0-.96.27-1.6 1.65-1.6h1.75V4.14C15.94 4.1 15 4 13.9 4c-2.3 0-3.9 1.4-3.9 4v2.7H7.3v3.3H10v8h3.5Z" />
+                    {% elif social.icon == 'email' %}
+                      <path d="M2.003 5.884 10 9.882l7.997-3.998A2 2 0 0 0 16 4H4a2 2 0 0 0-1.997 1.884ZM18 8.118l-8 4-8-4V14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.118Z" />
+                    {% endif %}
+                  </svg>
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-ink-900/10">
+    <div class="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 pt-6 pb-28 text-center sm:pb-24 lg:pb-24 lg:flex-row lg:justify-between lg:px-12 lg:text-left">
+      <p class="m-0 font-sans text-sm text-text-subtle">
+        &copy; {% now "Y" %} Lifecasting Studio &middot; Handmade in Bengaluru
+      </p>
+      <nav aria-label="Legal and support" class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-sans text-sm">
+        <a href="{% url 'catalog:faq_help_center' %}" class="text-text-muted no-underline transition-colors duration-300 hover:text-primary">Help Center</a>
+        <a href="{% url 'catalog:shipping_policy' %}" class="text-text-muted no-underline transition-colors duration-300 hover:text-primary">Shipping</a>
+        <a href="{% url 'catalog:privacy' %}" class="text-text-muted no-underline transition-colors duration-300 hover:text-primary">Privacy</a>
+        <a href="{% url 'catalog:terms' %}" class="text-text-muted no-underline transition-colors duration-300 hover:text-primary">Terms</a>
+      </nav>
+    </div>
+  </div>
+</footer>

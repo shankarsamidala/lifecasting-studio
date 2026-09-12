@@ -1,0 +1,355 @@
+{% load static %}
+<!-- TOP ANNOUNCEMENT BAR -->
+{% if site_settings.announcement_bar %}
+  <div class="bg-primary text-white py-1.5 px-3 text-center text-[11px] sm:text-xs font-semibold tracking-wide leading-tight">
+    <span class="text-white">{{ site_settings.announcement_bar }}</span>
+  </div>
+{% endif %}
+
+<!-- MAIN HEADER -->
+<header class="sticky top-0 z-50 border-b border-ink-900/10 bg-surface/95 backdrop-blur-md">
+  <div class="relative mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6">
+    
+    <!-- Left: Hamburger Toggle & Logo -->
+    <div class="flex items-center gap-3">
+      <button
+        id="openNavBtn"
+        type="button"
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-text hover:bg-surface-alt transition-colors lg:hidden"
+        aria-label="Open navigation menu"
+        aria-controls="mobile-nav-drawer"
+      >
+        <svg width="20" height="16" viewBox="0 0 20 16" fill="none" aria-hidden="true">
+          <path d="M0 1h20M0 8h20M0 15h20" stroke="currentColor" stroke-width="2" />
+        </svg>
+      </button>
+
+      <a
+        href="{% url 'catalog:home' %}"
+        class="site-logo site-logo--mark-only absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0"
+      >
+        <img
+          src="{% static 'images/logo.webp' %}"
+          srcset="{% static 'images/logo.webp' %} 371w, {% static 'images/logo@2x.webp' %} 741w"
+          sizes="48px"
+          alt=""
+          width="46"
+          height="40"
+          fetchpriority="high"
+          decoding="async"
+          class="site-logo__mark"
+        />
+        <span class="site-logo__text">
+          Lifecasting <span class="text-primary">Studio</span>
+        </span>
+      </a>
+    </div>
+
+    <!-- Center: Primary Desktop Nav & Search -->
+    <nav aria-label="Primary Navigation" class="hidden flex-1 items-center justify-center max-w-2xl lg:flex gap-8">
+      <ul role="list" class="flex list-none items-center gap-8 p-0">
+        
+        <!-- Collections Dropdown -->
+        <li class="relative group">
+          <button type="button" class="flex items-center gap-1.5 font-sans text-sm font-semibold text-text hover:text-primary transition-colors">
+            Categories
+            <svg class="w-4 h-4 text-text-muted transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+
+          <!-- Mega Menu Panel -->
+          <div class="absolute top-full left-1/2 z-50 mt-3 w-[min(90vw,56rem)] -translate-x-1/2 rounded-2xl border border-ink-900/10 bg-surface p-8 shadow-lift opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div class="grid grid-cols-3 gap-x-8 gap-y-6">
+              {% for cat in all_categories %}
+                <div>
+                  <a href="{% url 'catalog:category_detail' category_slug=cat.slug %}" class="font-display text-sm font-semibold text-text no-underline hover:text-primary transition-colors flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                    {{ cat.label }}
+                  </a>
+                  {% if cat.models.all %}
+                    <ul role="list" class="m-0 mt-2 flex list-none flex-col gap-1.5 p-0 pl-4 border-l border-ink-900/10">
+                      {% for m in cat.models.all %}
+                        <li>
+                          <a href="{% url 'catalog:product_detail' category_slug=cat.slug model_slug=m.slug %}" class="font-sans text-xs text-text-muted no-underline transition-colors hover:text-primary">
+                            {{ m.label }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}" class="font-sans text-sm font-medium text-text hover:text-primary no-underline transition-colors">
+            Baby Casting
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'catalog:category_detail' category_slug='resin-art' %}" class="font-sans text-sm font-medium text-text hover:text-primary no-underline transition-colors">
+            Resin Keepsakes
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'catalog:shipping_policy' %}" class="font-sans text-sm font-medium text-text hover:text-primary no-underline transition-colors">
+            Shipping Policy
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'catalog:contact' %}" class="font-sans text-sm font-medium text-text hover:text-primary no-underline transition-colors">
+            Contact Us
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+
+    <!-- Right: Book Slot & WhatsApp Action -->
+    <div class="flex items-center gap-3 shrink-0">
+      <a href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank" rel="noopener" class="btn-primary text-xs sm:text-sm px-4 py-2.5 sm:px-6 sm:py-3 shadow-rest">
+        <span>Book Slot</span>
+      </a>
+    </div>
+
+  </div>
+</header>
+
+<!-- MOBILE DRAWER -->
+<div id="mobileDrawer" class="fixed inset-0 z-50 hidden">
+  <!-- Backdrop -->
+  <div id="menuBackdrop" class="fixed inset-0 bg-ink-900/40 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
+  
+  <!-- Drawer Panel -->
+  <nav
+    id="mobile-nav-drawer"
+    aria-label="Mobile Navigation"
+    class="fixed inset-y-0 left-0 z-50 flex h-dvh w-[24rem] max-w-[88vw] flex-col bg-surface shadow-lift border-r border-ink-900/10 transition-transform duration-300 ease-soft -translate-x-full"
+  >
+    <!-- Drawer Header -->
+    <div class="flex shrink-0 items-center justify-between border-b border-ink-900/10 px-5 py-4">
+      <a href="{% url 'catalog:home' %}" onclick="closeDrawer()" class="site-logo">
+        <img src="{% static 'images/logo.webp' %}" alt="" width="46" height="40" decoding="async" class="site-logo__mark" />
+        <span class="site-logo__text">
+          Lifecasting <span class="text-primary">Studio</span>
+        </span>
+      </a>
+      <button
+        id="closeNavBtn"
+        type="button"
+        class="flex h-9 w-9 items-center justify-center rounded-full bg-surface-alt text-text hover:bg-ink-900/10 transition-colors"
+        aria-label="Close navigation menu"
+      >
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M1 1l14 14M15 1L1 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Drawer Content with exact mobile-nav list--unstyled structure -->
+    <div class="drawer__content flex-1 overflow-y-auto p-5">
+      <ul class="mobile-nav list--unstyled space-y-1 p-0 m-0" role="list">
+        
+        <!-- NEW ARRIVALS -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3" data-level="1">
+          <a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}" onclick="closeDrawer()" class="mobile-nav__link font-display text-base font-semibold text-text flex items-center justify-between py-2 no-underline hover:text-primary transition-colors">
+            NEW ARRIVALS
+          </a>
+        </li>
+
+        <!-- Baby Casting -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-baby" aria-expanded="false">
+            <span>Baby casting</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+          <collapsible-content id="mobile-menu-baby" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}?group=2-casting" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">2casting</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}?group=4-casting" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">4casting</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='parent-with-baby' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Parent with Baby</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+        <!-- Couple Casting -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-couple" aria-expanded="false">
+            <span>Couple Casting</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+          <collapsible-content id="mobile-menu-couple" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='couple-casting' model_slug='2-hands-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='couple-casting' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+        <!-- Sibling Casting -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-sibling" aria-expanded="false">
+            <span>Sibling Casting</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+          <collapsible-content id="mobile-menu-sibling" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='sibling-casting' model_slug='2-hands-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='sibling-casting' model_slug='2-hands-frame' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+        <!-- Aashirvaad Casting -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-aashirvaad" aria-expanded="false">
+            <span>Aashirvaad Casting</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+          <collapsible-content id="mobile-menu-aashirvaad" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='aashirvaad-casting' model_slug='2-hands-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='aashirvaad-casting' model_slug='2-hands-frame' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+        <!-- Family Casting -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-family" aria-expanded="false">
+            <span>Family Casting</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+          <collapsible-content id="mobile-menu-family" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='family-casting' model_slug='3-hands-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='family-casting' model_slug='4-hands-frame' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+        <!-- Pet Casting -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-pet" aria-expanded="false">
+            <span>Pet Casting</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+          <collapsible-content id="mobile-menu-pet" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='pet-casting' model_slug='1-paw-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='pet-casting' model_slug='1-paw-frame' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+        <!-- Mother Milk Jewellery -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-mothermilk" aria-expanded="false">
+            <span>Mother Milk Jewellery</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+          <collapsible-content id="mobile-menu-mothermilk" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='mother-milk-jewellery' model_slug='gold' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Gold</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='mother-milk-jewellery' model_slug='silver' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Silver</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='mother-milk-jewellery' model_slug='without-metal' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Without metal</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+        <!-- Resin Art -->
+        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-resin" aria-expanded="false">
+            <span>Resin Art</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+          <collapsible-content id="mobile-menu-resin" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='resin-art' model_slug='garland-preservation' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Garland preservation</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='resin-art' model_slug='baby-keepsake' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Baby keepsake</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='resin-art' model_slug='parent-keepsake' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Parent keepsake</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+        <!-- Customer Service -->
+        <li class="mobile-nav__item pt-2" data-level="1">
+          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-service" aria-expanded="false">
+            <span>Customer Service</span>
+            <span class="animated-plus text-primary shrink-0"></span>
+          </button>
+
+          <collapsible-content id="mobile-menu-service" class="collapsible" data-open="false">
+            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:faq_help_center' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline transition-colors">Help Center &amp; FAQ</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:shipping_policy' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline transition-colors">Shipping &amp; Delivery Policy</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:privacy' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline transition-colors">Privacy Policy</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:terms' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline transition-colors">Terms of Service</a></li>
+              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:contact' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline transition-colors">Contact Us</a></li>
+            </ul>
+          </collapsible-content>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="shrink-0 border-t border-ink-900/10 p-4 space-y-3 bg-surface-alt/30">
+      <a href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hi!%20I'd%20like%20to%20book%20a%20lifecasting%20session." target="_blank" rel="noopener" class="btn-primary w-full text-center text-xs py-3 justify-center shadow-lift">
+        Book Slot on WhatsApp
+      </a>
+      <p class="text-xs text-center text-text-subtle">AECS Layout, Marathahalli, Bengaluru</p>
+    </div>
+  </nav>
+</div>
+
+<script>
+  const mobileDrawer = document.getElementById('mobileDrawer');
+  const navDrawerPanel = document.getElementById('mobile-nav-drawer');
+  const openNavBtn = document.getElementById('openNavBtn');
+  const closeNavBtn = document.getElementById('closeNavBtn');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+
+  function openDrawer() {
+    mobileDrawer?.classList.remove('hidden');
+    setTimeout(() => {
+      menuBackdrop?.classList.remove('opacity-0');
+      navDrawerPanel?.classList.remove('-translate-x-full');
+      navDrawerPanel?.classList.add('translate-x-0');
+    }, 10);
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    menuBackdrop?.classList.add('opacity-0');
+    navDrawerPanel?.classList.remove('translate-x-0');
+    navDrawerPanel?.classList.add('-translate-x-full');
+    setTimeout(() => {
+      mobileDrawer?.classList.add('hidden');
+      document.body.style.overflow = '';
+    }, 300);
+  }
+
+  function toggleMobileSubmenu(btn) {
+    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+    const targetContent = document.getElementById(btn.getAttribute('aria-controls'));
+
+    btn.setAttribute('aria-expanded', String(!isExpanded));
+    // data-open drives both the height animation and the visibility switch
+    // that keeps collapsed links out of the tab order. See .collapsible.
+    targetContent?.setAttribute('data-open', String(!isExpanded));
+  }
+
+  openNavBtn?.addEventListener('click', openDrawer);
+  closeNavBtn?.addEventListener('click', closeDrawer);
+  menuBackdrop?.addEventListener('click', closeDrawer);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !mobileDrawer?.classList.contains('hidden')) {
+      closeDrawer();
+    }
+  });
+</script>

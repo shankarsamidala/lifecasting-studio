@@ -1,0 +1,9 @@
+{% extends "admin/change_form.html" %}
+{% comment %}
+  Embeds the category → allowed product-name ids map so the dropdown can be
+  narrowed client-side without an extra request.
+{% endcomment %}
+{% block admin_change_form_document_ready %}
+  {{ block.super }}
+  {{ category_product_names|json_script:"category-product-names" }}
+{% endblock %}

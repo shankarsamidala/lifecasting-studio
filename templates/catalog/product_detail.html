@@ -1,0 +1,448 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ model.label }} — {{ category.label }} | Lifecasting Studio{% endblock %}
+
+{% block content %}
+<div class="py-8 sm:py-12 lg:py-16 bg-surface relative overflow-hidden pb-28 lg:pb-16">
+  
+  <!-- Soft Ambient Radial Background Glow -->
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    
+    <!-- Breadcrumb Trail -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-sm text-text-muted mb-5 sm:mb-8">
+      <a href="{% url 'catalog:home' %}" class="hover:text-primary transition-colors">Home</a>
+      <span>/</span>
+      <a href="{% url 'catalog:category_detail' category_slug=category.slug %}" class="hover:text-primary transition-colors">{{ category.label }}</a>
+      <span>/</span>
+      <span class="text-text font-medium truncate">{{ model.label }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-12 sm:mb-20">
+      
+      <!-- Product Image Showcase (Left Column) -->
+      <div class="lg:col-span-6 space-y-4">
+        <div class="relative rounded-2xl overflow-hidden shadow-lift shadow-ink-900/10 border border-ink-900/10 bg-surface group">
+          
+          <!-- Main Image -->
+          <div class="relative h-[260px] sm:h-[360px] lg:h-[420px] w-full overflow-hidden bg-surface-alt">
+            <img decoding="async" loading="lazy" id="mainImage" src="{{ model.get_display_image }}" alt="{{ model.label }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            
+          </div>
+
+          <!-- Top Floating Glass Badges -->
+          <div class="absolute top-4 left-4 z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-surface/90 backdrop-blur-md border border-surface/70 shadow-rest text-xs font-semibold text-primary">
+            <span>100% Skin-Safe Dental Gel</span>
+          </div>
+
+          {% if category.warranty %}
+            <div class="absolute bottom-4 left-4 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ink-900/55 backdrop-blur-md border border-surface/25 text-xs font-semibold text-white">
+              {{ category.warranty }}
+            </div>
+          {% endif %}
+
+        </div>
+
+        {# Strip only shows once there is a second photo to switch to. #}
+        {% if model.all_photos|length > 1 %}
+          <div class="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0" role="group" aria-label="{{ model.label }} photos">
+            {% for photo in model.all_photos %}
+              <button
+                type="button"
+                onclick="showPhoto(this, '{{ photo.url|escapejs }}', '{{ photo.caption|escapejs }}')"
+                aria-label="Show photo {{ forloop.counter }}: {{ photo.caption }}"
+                {% if forloop.first %}aria-current="true"{% endif %}
+                class="thumb-btn rounded-md border bg-surface-alt transition-colors {% if forloop.first %}border-primary{% else %}border-ink-900/10 hover:border-primary/50{% endif %}"
+              >
+                <img decoding="async" loading="lazy" src="{{ photo.url }}" alt="" />
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Product Configuration & Booking Details (Right Column) -->
+      <div class="lg:col-span-6 space-y-6">
+        
+        <!-- Header Info -->
+        <div>
+          <div class="flex items-center justify-between gap-2 flex-wrap mb-3">
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-surface-alt text-text-subtle uppercase tracking-wider">
+                {{ category.label }}
+              </span>
+            </div>
+
+            <!-- Star Rating Badge -->
+            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold text-text-subtle bg-surface-alt border border-ink-900/10">
+              ★ {{ model.rating|default:"5.0" }} <span class="text-text-muted font-normal text-xs">({{ model.review_count|default:"24" }} reviews)</span>
+            </span>
+          </div>
+
+          <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-text tracking-tight leading-tight mb-2">
+            {{ model.label }}
+          </h1>
+          
+          <p class="text-xs text-text-muted">
+            Custom handcrafted 3D impression frame capturing lifelong memories in gold and silver finish.
+          </p>
+        </div>
+
+        <!-- Dynamic Price Display Card -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-surface to-surface-alt/70 border border-ink-900/10 shadow-rest space-y-1.5">
+          <p class="text-xs font-semibold text-primary uppercase tracking-wider">Starting Price</p>
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span id="displayPrice" class="font-display text-4xl sm:text-5xl font-semibold text-primary tracking-tight">
+              {% if model.starting_price %}
+                ₹{{ model.starting_price }}
+              {% else %}
+                Enquire for price
+              {% endif %}
+            </span>
+            {% if model.strike_price %}
+              <span class="text-base text-text-muted line-through">₹{{ model.strike_price }}</span>
+            {% endif %}
+          </div>
+          <p class="text-xs text-text-muted pt-1">
+            *Includes doorstep impression service, raw casting, and custom lacquer finishing in Bangalore.
+          </p>
+        </div>
+
+        <!-- Age selector — only when the product has more than one price row -->
+        {% if model.price_tiers.count > 1 %}
+          <div class="space-y-3">
+            <label class="block text-sm font-semibold text-text">Age</label>
+            <div class="grid grid-cols-2 gap-3">
+              {% for tier in model.price_tiers.all %}
+                <button type="button"
+                        onclick="selectTier('{{ tier.get_label_display|escapejs }}', {{ tier.price }}, this)"
+                        class="tier-btn p-3.5 rounded-2xl border text-left font-sans text-sm font-medium transition-all duration-300 {% if forloop.first %}border-2 border-primary bg-primary/10 text-primary font-semibold shadow-rest{% else %}border-ink-900/10 bg-surface text-text hover:border-ink-900/15{% endif %}">
+                  <div class="font-semibold text-text text-sm">{{ tier.get_label_display }}</div>
+                  <div class="text-xs font-semibold text-primary mt-1 nums">₹{{ tier.price }}</div>
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Frame Option Selector -->
+        <div class="space-y-3">
+          <label class="block text-sm font-semibold text-text">Frame type</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="frame-option-card flex items-start gap-3 p-3.5 rounded-2xl border-2 border-primary bg-primary/5 cursor-pointer transition-all">
+              <input type="radio" name="frame_model" value="Display Box Model" checked class="accent-primary mt-1" />
+              <div>
+                <p class="text-sm font-semibold text-text">3D Display Box</p>
+                <p class="text-xs text-text-muted">Deep shadow box with acrylic glass cover</p>
+              </div>
+            </label>
+            <label class="frame-option-card flex items-start gap-3 p-3.5 rounded-2xl border border-ink-900/10 bg-surface hover:border-ink-900/15 cursor-pointer transition-all">
+              <input type="radio" name="frame_model" value="Classic Frame" class="accent-primary mt-1" />
+              <div>
+                <p class="text-sm font-semibold text-text">Classic Frame</p>
+                <p class="text-xs text-text-muted">Traditional wood moulding finish</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        {% if model.preservation_note %}
+          <div class="p-4 rounded-2xl bg-surface-alt border border-ink-900/10 text-xs text-text-muted leading-relaxed">
+            <span class="font-semibold text-text-subtle block mb-1">Preservation note</span>
+            {{ model.preservation_note }}
+          </div>
+        {% endif %}
+
+        <!-- Book Now WhatsApp CTA -->
+        <div class="pt-2 space-y-3">
+          <a id="bookWhatsAppBtn" href="{{ whatsapp_link }}" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-primary hover:bg-primary-hover text-white text-base font-semibold shadow-lift shadow-primary/30 transition-all hover:scale-105">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+            Book Now on WhatsApp
+          </a>
+
+          <!-- Live availability & Guarantee Strip -->
+          <div class="flex items-center justify-center gap-4 text-xs text-text-muted font-medium flex-wrap pt-1">
+            <span class="flex items-center gap-1 text-success font-semibold">
+              Instant Studio Response
+            </span>
+            <span>•</span>
+            <span>100% Skin Safe</span>
+            <span>•</span>
+            <span>Doorstep Impression</span>
+          </div>
+        </div>
+
+        <!-- Prominent Disclaimer Font -->
+        <p class="text-sm font-semibold text-text pt-1 border-t border-ink-900/10">
+          All prices are in Indian Rupees (INR). Final pricing may vary based on customization.
+        </p>
+
+        <!-- Customization Options Checklist -->
+        <div class="p-4 rounded-2xl bg-surface-alt/70 border border-ink-900/10 space-y-2">
+          <p class="text-xs font-semibold uppercase tracking-wider text-primary">Customization Options</p>
+          <div class="flex flex-wrap gap-2 text-xs font-medium text-text">
+            <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Frame Style</span>
+            <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Photo Inclusion</span>
+            <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Nameplate Engraving</span>
+            <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Flowers &amp; Keepsakes</span>
+            <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Baby Height &amp; Weight Tag</span>
+          </div>
+        </div>
+
+        {% if category.warranty %}
+          <div class="p-4 rounded-2xl bg-surface border border-ink-900/10 text-xs text-text leading-relaxed">
+            <span class="font-semibold text-primary block mb-1">Warranty Period</span>
+            {{ category.warranty }}
+          </div>
+        {% endif %}
+
+        <!-- Specifications & Delivery Details -->
+        <div class="p-5 rounded-2xl bg-surface border border-ink-900/10 shadow-rest space-y-4">
+          <h2 class="font-display font-semibold text-sm text-text uppercase tracking-wider">
+            Casting &amp; Delivery Details
+          </h2>
+          
+          <div class="space-y-3 text-xs text-text-muted leading-relaxed">
+            <div>
+              <p class="font-semibold text-text">For Casting:</p>
+              <ul class="list-disc pl-4 space-y-1 mt-1">
+                <li>Book the slot and visit the studio for casting.</li>
+                <li>We also provide doorstep service up to 25KM with a service charge of ₹1,000.</li>
+                <li>More than 25KMs, transport charges apply.</li>
+              </ul>
+            </div>
+
+            <div>
+              <p class="font-semibold text-text">Final Delivery:</p>
+              <ul class="list-disc pl-4 space-y-1 mt-1">
+                <li>After customer provides all details (photos, baby details/name), product delivery takes 3 to 4 weeks (4-5 weeks for Resin/Jewellery).</li>
+                <li>Final product delivery: either collect from studio or book for Porter.</li>
+              </ul>
+            </div>
+
+            {% if category.casting_process %}
+              <div>
+                <p class="font-semibold text-text">Casting Process:</p>
+                <p class="mt-0.5">{{ category.casting_process }}</p>
+              </div>
+            {% endif %}
+
+            {% if category.materials %}
+              <div>
+                <p class="font-semibold text-text">Materials Used:</p>
+                <ul class="list-disc pl-4 space-y-1 mt-1">
+                  {% for mat in category.materials %}
+                    <li>{{ mat }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            {% if model.preservation_note or category.preservation %}
+              <div>
+                <p class="font-semibold text-text">Preservation Instructions:</p>
+                <p class="mt-0.5">{{ model.preservation_note|default:category.preservation.0 }}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- Related Models ("You May Also Like") -->
+    {% if related_models %}
+      <div class="border-t border-ink-900/10 pt-16">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-2">
+          <div>
+            <span class="text-xs font-semibold text-text-subtle uppercase tracking-wider block mb-1">Handcrafted Keepsakes</span>
+            <h2 class="font-display text-2xl sm:text-3xl font-semibold text-text tracking-tight">You May Also Like</h2>
+          </div>
+          <a href="{% url 'catalog:category_detail' category_slug=category.slug %}" class="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1">
+            View All {{ category.label }} Models
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          {% for r in related_models %}
+            <a
+              href="{% url 'catalog:product_detail' category_slug=category.slug model_slug=r.slug %}"
+              class="group relative bg-surface rounded-2xl border border-ink-900/10 hover:border-ink-900/10 shadow-rest hover:shadow-lift hover:shadow-primary/5 overflow-hidden flex flex-col justify-between no-underline cursor-pointer transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <div>
+                <!-- Flush Top Image Showcase -->
+                <div class="relative h-52 sm:h-56 w-full overflow-hidden bg-surface-alt">
+                  <img decoding="async" loading="lazy" src="{{ r.get_display_image }}" alt="{{ r.label }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  
+
+                  <!-- Top Left Badge Tag -->
+                  {% if r.badge %}
+                    <span class="absolute top-3 left-3 bg-ink-900/70 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-rest">
+                      {{ r.badge }}
+                    </span>
+                  {% elif r.group %}
+                    <span class="absolute top-3 left-3 bg-surface/90 backdrop-blur-md text-text text-xs font-semibold px-2.5 py-0.5 rounded-full border border-ink-900/10 uppercase tracking-wider">
+                      {{ r.group }}
+                    </span>
+                  {% endif %}
+                </div>
+
+                <!-- Content Container -->
+                <div class="p-5 space-y-2.5">
+                  
+                  <!-- Sub-header & Rating -->
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="font-semibold text-text-subtle uppercase tracking-wider text-xs">{{ category.label }}</span>
+                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-text-subtle bg-surface-alt px-2 py-0.5 rounded-full border border-ink-900/10">
+                      ★ {{ r.rating|default:"5.0" }}
+                    </span>
+                  </div>
+
+                  <!-- Product Title -->
+                  <h3 class="font-display font-semibold text-base text-text group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                    {{ r.label }}
+                  </h3>
+
+                </div>
+              </div>
+
+              <!-- Bottom Card Footer (Price & Action Button) -->
+              <div class="px-5 pb-5 pt-2 border-t border-ink-900/5 flex items-center justify-between mt-auto">
+                <div>
+                  {% if r.starting_price %}
+                    <span class="text-xs text-text-muted font-medium block uppercase tracking-wider">Starts at</span>
+                    <div class="flex items-baseline gap-1.5">
+                      <span class="font-display text-lg font-semibold text-primary">₹{{ r.starting_price }}</span>
+                      {% if r.strike_price %}
+                        <span class="text-xs text-text-muted line-through">₹{{ r.strike_price }}</span>
+                      {% endif %}
+                    </div>
+                  {% else %}
+                    <span class="text-xs font-semibold text-primary">View Options</span>
+                  {% endif %}
+                </div>
+
+                <!-- Action Button -->
+                <span class="px-3 py-1.5 rounded-full bg-surface-alt group-hover:bg-primary text-xs font-semibold text-text group-hover:text-white transition-all duration-300 shadow-rest">
+                  View
+                </span>
+              </div>
+
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<!-- STICKY BOOKING BAR (mobile)
+     On a phone the Book CTA sits roughly 1500px down the page, below the
+     image, price, tiers, frame options and specs. This keeps the price and
+     the action in reach at every scroll position. It mirrors #displayPrice,
+     so picking a tier updates both. -->
+<div class="fixed inset-x-0 bottom-0 z-40 border-t border-ink-900/10 bg-surface/95 backdrop-blur-md px-4 py-3 lg:hidden" style="padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));">
+  <div class="flex items-center gap-3">
+    <div class="min-w-0">
+      <p class="m-0 text-xs text-text-muted">From</p>
+      <p class="m-0 font-display text-lg font-semibold text-primary nums truncate" id="stickyPrice">
+        {% if model.starting_price %}₹{{ model.starting_price }}{% else %}Enquire{% endif %}
+      </p>
+    </div>
+    <a
+      id="stickyBookBtn"
+      href="{{ whatsapp_link }}"
+      target="_blank"
+      rel="noopener"
+      class="btn-primary ml-auto shrink-0"
+    >
+      Book Now
+    </a>
+  </div>
+</div>
+{% endblock %}
+
+{# Own sticky bar here, so suppress the floating chat bubble. #}
+{% block floating_cta %}{% endblock %}
+
+{% block extra_js %}
+<script>
+  let selectedTierLabel = '';
+  const modelLabel = "{{ model.label|escapejs }}";
+  const categoryLabel = "{{ category.label|escapejs }}";
+  const whatsappNumber = "{{ site_settings.whatsapp_number }}";
+  const imageUrl = window.location.origin + "{{ model.get_display_image }}";
+
+  function showPhoto(btn, url, caption) {
+    const main = document.getElementById('mainImage');
+    if (!main) return;
+    main.src = url;
+    main.alt = caption;
+    document.querySelectorAll('.thumb-btn').forEach(b => {
+      b.classList.remove('border-primary');
+      b.classList.add('border-ink-900/10', 'hover:border-primary/50');
+      b.removeAttribute('aria-current');
+    });
+    btn.classList.remove('border-ink-900/10', 'hover:border-primary/50');
+    btn.classList.add('border-primary');
+    btn.setAttribute('aria-current', 'true');
+  }
+
+  function selectTier(label, price, btn) {
+    selectedTierLabel = label;
+    const formatted = '₹' + price.toLocaleString();
+    document.getElementById('displayPrice').innerText = formatted;
+    // keep the sticky bar in step with the tier the user picked
+    const sticky = document.getElementById('stickyPrice');
+    if (sticky) sticky.innerText = formatted;
+
+    document.querySelectorAll('.tier-btn').forEach(b => {
+      b.classList.remove('border-2', 'border-primary', 'bg-primary/10', 'text-primary', 'font-semibold', 'shadow-rest');
+      b.classList.add('border-ink-900/10', 'bg-surface', 'text-text');
+    });
+
+    btn.classList.remove('border-ink-900/10', 'bg-surface', 'text-text');
+    btn.classList.add('border-2', 'border-primary', 'bg-primary/10', 'text-primary', 'font-semibold', 'shadow-rest');
+
+    updateWhatsAppLink();
+  }
+
+  function updateFrameStyles() {
+    document.querySelectorAll('input[name="frame_model"]').forEach(radio => {
+      const card = radio.closest('.frame-option-card');
+      if (card) {
+        if (radio.checked) {
+          card.classList.remove('border-ink-900/10', 'bg-surface');
+          card.classList.add('border-2', 'border-primary', 'bg-primary/5');
+        } else {
+          card.classList.remove('border-2', 'border-primary', 'bg-primary/5');
+          card.classList.add('border-ink-900/10', 'bg-surface');
+        }
+      }
+    });
+  }
+
+  function updateWhatsAppLink() {
+    let frameChoice = document.querySelector('input[name="frame_model"]:checked')?.value || 'Display Box Model';
+    let text = `Hi! I'd like to book "${modelLabel}" under ${categoryLabel}.`;
+    if (selectedTierLabel) {
+      text += ` Selection: ${selectedTierLabel}.`;
+    }
+    text += ` Frame: ${frameChoice}.\nPlease share details.\nPhoto: ${imageUrl}`;
+
+    let url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    document.getElementById('bookWhatsAppBtn').href = url;
+    const stickyBtn = document.getElementById('stickyBookBtn');
+    if (stickyBtn) stickyBtn.href = url;
+  }
+
+  document.querySelectorAll('input[name="frame_model"]').forEach(r => {
+    r.addEventListener('change', () => {
+      updateFrameStyles();
+      updateWhatsAppLink();
+    });
+  });
+</script>
+{% endblock %}

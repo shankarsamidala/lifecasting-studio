@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us — Lifecasting Studio Marathahalli Bengaluru{% endblock %}
+
+{% block content %}
+<div class="py-16 sm:py-20 bg-surface">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Minimal Header Section -->
+    <div class="text-center max-w-2xl mx-auto mb-14 space-y-2">
+      <p class="text-xs font-semibold text-text-subtle uppercase tracking-widest">Get In Touch</p>
+      <h1 class="font-display text-4xl sm:text-5xl font-semibold text-text tracking-tight">Contact Our Studio</h1>
+      <p class="text-sm sm:text-base text-text-subtle max-w-lg mx-auto font-normal pt-1">
+        Have questions about 3D baby castings, couple hand impressions, or scheduling a doorstep impression? We are here to help.
+      </p>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-16">
+      
+      <!-- Studio Location & Map Card (Left Column) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Clean Map Image Showcase (Kept Map Image as requested) -->
+        <div class="relative rounded-2xl overflow-hidden border border-ink-900/10 bg-surface-alt group shadow-rest">
+          <div class="relative h-64 sm:h-72 w-full overflow-hidden">
+            <img decoding="async" loading="lazy" src="/static/images/contact/lcs-map.webp" alt="Map to Lifecasting Studio AECS Layout Marathahalli" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          </div>
+
+          <a href="https://maps.google.com/?q=Lifecasting+Studio+AECS+Layout+Marathahalli" target="_blank" rel="noopener" class="absolute bottom-4 right-4 z-10 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-surface/95 backdrop-blur-md text-text border border-ink-900/10 text-xs font-medium shadow-rest hover:bg-surface transition-all">
+            Open in Maps ↗
+          </a>
+        </div>
+
+        <!-- Studio Information Card -->
+        <div class="p-6 rounded-2xl bg-surface border border-ink-900/10 shadow-rest space-y-5">
+          <h2 class="font-display font-semibold text-base text-text border-b border-ink-900/10 pb-3 flex items-center justify-between">
+            <span>Studio Contact Information</span>
+            <span class="text-xs text-text-subtle font-medium bg-surface-alt px-2.5 py-0.5 rounded-full">Marathahalli</span>
+          </h2>
+          
+          <div class="space-y-4 text-sm text-text-muted">
+            <!-- Studio Address -->
+            <div class="space-y-1">
+              <p class="text-xs font-semibold text-text-subtle uppercase tracking-wider">Studio Address</p>
+              <p class="font-medium text-text">{{ footer_settings.address_line1 }}</p>
+              <p class="text-xs text-text-subtle">{{ footer_settings.address_line2 }}</p>
+              <p class="text-xs text-text-subtle">{{ footer_settings.address_line3 }}</p>
+            </div>
+
+            <!-- Phone & WhatsApp -->
+            <div class="pt-2 space-y-1 border-t border-ink-900/10">
+              <p class="text-xs font-semibold text-text-subtle uppercase tracking-wider">Phone / WhatsApp</p>
+              <a href="{{ footer_settings.phone_href }}" class="font-medium text-text hover:text-text-muted transition-colors block text-base">{{ footer_settings.phone }}</a>
+            </div>
+
+            <!-- Email Address -->
+            <div class="pt-2 space-y-1 border-t border-ink-900/10">
+              <p class="text-xs font-semibold text-text-subtle uppercase tracking-wider">Email Address</p>
+              <a href="mailto:{{ footer_settings.email }}" class="font-medium text-text hover:text-text-muted transition-colors block text-sm">{{ footer_settings.email }}</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Minimal Contact Form (Right Column) -->
+      <div class="lg:col-span-7">
+        <div class="p-8 sm:p-10 rounded-2xl bg-surface border border-ink-900/10 shadow-rest space-y-6">
+          
+          <div>
+            <h2 class="font-display font-semibold text-2xl text-text tracking-tight">Send a Message</h2>
+            <p class="text-xs text-text-subtle mt-1">Fill out the form below and our studio team will respond immediately via WhatsApp.</p>
+          </div>
+
+          <form method="POST" action="{% url 'catalog:contact' %}" class="space-y-5">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="name" class="block text-sm font-medium text-text-muted mb-1.5">Full Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Priyanka Sharma" class="w-full rounded-xl border border-ink-900/10 bg-surface-tint px-4 py-3 text-base text-text placeholder-text-subtle outline-none transition-colors focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20" />
+              </div>
+              <div>
+                <label for="phone" class="block text-sm font-medium text-text-muted mb-1.5">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" required placeholder="+91 98765 43210" class="w-full rounded-xl border border-ink-900/10 bg-surface-tint px-4 py-3 text-base text-text placeholder-text-subtle outline-none transition-colors focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="email" class="block text-sm font-medium text-text-muted mb-1.5">Email Address *</label>
+                <input type="email" id="email" name="email" required placeholder="name@example.com" class="w-full rounded-xl border border-ink-900/10 bg-surface-tint px-4 py-3 text-base text-text placeholder-text-subtle outline-none transition-colors focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20" />
+              </div>
+              <div>
+                <label for="subject" class="block text-sm font-medium text-text-muted mb-1.5">Subject *</label>
+                <input type="text" id="subject" name="subject" required placeholder="Baby Hand & Feet Casting" class="w-full rounded-xl border border-ink-900/10 bg-surface-tint px-4 py-3 text-base text-text placeholder-text-subtle outline-none transition-colors focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20" />
+              </div>
+            </div>
+
+            <div>
+              <label for="message" class="block text-sm font-medium text-text-muted mb-1.5">Message *</label>
+              <textarea id="message" name="message" rows="4" required placeholder="Describe your preferred keepsake, baby's age, or session date..." class="w-full rounded-xl border border-ink-900/10 bg-surface-tint px-4 py-3 text-base text-text placeholder-text-subtle outline-none transition-colors focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20 resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary w-full">
+              Send Message via WhatsApp →
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Centered & Evenly Distributed Studio Info Strip -->
+    <div class="border-t border-ink-900/10 pt-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center max-w-4xl mx-auto">
+        <div class="space-y-1">
+          <p class="text-xs font-semibold text-text-subtle uppercase tracking-widest">Studio Hours</p>
+          <p class="text-sm font-medium text-text">Mon – Sun: 10:00 AM – 8:00 PM</p>
+          <p class="text-xs text-text-subtle">By prior appointment</p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="text-xs font-semibold text-text-subtle uppercase tracking-widest">Doorstep Service</p>
+          <p class="text-sm font-medium text-text">Available Across Bengaluru</p>
+          <p class="text-xs text-text-subtle">Home impression visits for newborns</p>
+        </div>
+
+        <div class="space-y-1">
+          <p class="text-xs font-semibold text-text-subtle uppercase tracking-widest">Visitor Parking</p>
+          <p class="text-sm font-medium text-text">Dedicated Studio Parking</p>
+          <p class="text-xs text-text-subtle">AECS Layout, Marathahalli</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
