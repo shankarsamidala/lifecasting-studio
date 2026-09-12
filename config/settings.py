@@ -228,6 +228,13 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# WhiteNoise scans STATIC_ROOT once at startup and caches the file list. In
+# development that means any file added after the server booted — a fresh
+# collectstatic, a newly installed app's assets — 404s until you restart,
+# which looks exactly like "the CSS is broken". Autorefresh re-checks the
+# disk per request: fine locally, never in production.
+WHITENOISE_AUTOREFRESH = DEBUG
+
 # WhiteNoise serves static straight from the container — at ~1.8MB there is no
 # reason to add a bucket. In production it fingerprints filenames and emits
 # far-future cache headers; the manifest backend is skipped under DEBUG so
