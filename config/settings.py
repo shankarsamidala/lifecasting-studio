@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 
 from django.core.exceptions import ImproperlyConfigured
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -95,6 +96,11 @@ if not DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
+    # django-unfold replaces the admin's templates, so it has to be listed
+    # above django.contrib.admin for its versions to win template lookup.
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -240,5 +246,122 @@ STORAGES = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# ─────────────────────────────────────────────────────────────
+# django-unfold — admin theme
+#
+# The studio owner is not a developer, so the admin is a product in its
+# own right. Unfold gives it a Tailwind shell; the sidebar below is the
+# real win, because it replaces "click through the app index" with a
+# fixed, plain-English menu in the order the owner actually works:
+# categories first, then the products inside them.
+#
+# Colours are the site's own brand pink (#ea4c89 = rgb 234 76 137) so the
+# admin does not read as a different product. Unfold wants the shades as
+# space-separated RGB channels, same convention as static/css/index.css.
+# ─────────────────────────────────────────────────────────────
+UNFOLD = {
+    'SITE_TITLE': 'Lifecasting Studio',
+    'SITE_HEADER': 'Lifecasting Studio',
+    'SITE_SUBHEADER': 'Manage your website',
+    'SITE_URL': '/',
+    'SHOW_HISTORY': True,
+    'SHOW_VIEW_ON_SITE': True,
+    'COLORS': {
+        'primary': {
+            '50':  '253 242 247',
+            '100': '252 231 241',
+            '200': '250 207 228',
+            '300': '246 169 205',
+            '400': '241 120 173',
+            '500': '234  76 137',   # #ea4c89 — the brand pink
+            '600': '204  61 120',   # #cc3d78 — hover/press
+            '700': '172  47  98',
+            '800': '143  41  82',
+            '900': '120  38  71',
+            '950': ' 73  16  39',
+        },
+    },
+    'SIDEBAR': {
+        'show_search': True,
+        'show_all_applications': False,
+        'navigation': [
+            {
+                'title': 'Catalogue',
+                'separator': False,
+                'items': [
+                    {
+                        'title': 'Casting types',
+                        'icon': 'category',
+                        'link': reverse_lazy('admin:catalog_castingtype_changelist'),
+                    },
+                    {
+                        'title': 'Casting categories',
+                        'icon': 'collections_bookmark',
+                        'link': reverse_lazy('admin:catalog_category_changelist'),
+                    },
+                    {
+                        'title': 'Casting products',
+                        'icon': 'inventory_2',
+                        'link': reverse_lazy('admin:catalog_castingmodel_changelist'),
+                    },
+                ],
+            },
+            {
+                'title': 'Enquiries',
+                'separator': True,
+                'items': [
+                    {
+                        'title': 'Contact messages',
+                        'icon': 'mail',
+                        'link': reverse_lazy('admin:catalog_contactmessage_changelist'),
+                    },
+                    {
+                        'title': 'Reviews',
+                        'icon': 'star',
+                        'link': reverse_lazy('admin:catalog_testimonial_changelist'),
+                    },
+                ],
+            },
+            {
+                'title': 'Website content',
+                'separator': True,
+                'items': [
+                    {
+                        'title': 'Homepage banners',
+                        'icon': 'image',
+                        'link': reverse_lazy('admin:catalog_heroimage_changelist'),
+                    },
+                    {
+                        'title': 'Questions & answers',
+                        'icon': 'help',
+                        'link': reverse_lazy('admin:catalog_faq_changelist'),
+                    },
+                    {
+                        'title': 'Site settings',
+                        'icon': 'settings',
+                        'link': reverse_lazy('admin:catalog_sitesettings_changelist'),
+                    },
+                    {
+                        'title': 'Footer settings',
+                        'icon': 'bottom_panel_open',
+                        'link': reverse_lazy('admin:catalog_footersettings_changelist'),
+                    },
+                    {
+                        'title': 'Social links',
+                        'icon': 'share',
+                        'link': reverse_lazy('admin:catalog_sociallink_changelist'),
+                    },
+                    {
+                        'title': 'Business hours',
+                        'icon': 'schedule',
+                        'link': reverse_lazy('admin:catalog_businesshour_changelist'),
+                    },
+                ],
+            },
+        ],
+    },
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

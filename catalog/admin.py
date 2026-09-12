@@ -12,6 +12,10 @@ Written for the studio owner, not a developer. The guiding rules:
 
 from django.contrib import admin
 from django.utils.html import format_html
+from unfold.admin import (
+    ModelAdmin as UnfoldModelAdmin,
+    TabularInline as UnfoldTabularInline,
+)
 
 from .models import (
     BusinessHour,
@@ -82,7 +86,7 @@ class HiddenFromIndexMixin:
 
 # ─────────────────────────── inlines ───────────────────────────
 
-class CategoryMaterialInline(admin.TabularInline):
+class CategoryMaterialInline(UnfoldTabularInline):
     """Pre-filled with the studio's standard three lines on a new category.
 
     They are ordinary editable rows, not fixed text — clear one, reword it, or
@@ -113,7 +117,7 @@ class CategoryMaterialInline(admin.TabularInline):
         return PrefilledFormSet
 
 
-class CategoryDeliveryRuleInline(admin.TabularInline):
+class CategoryDeliveryRuleInline(UnfoldTabularInline):
     """Pre-filled with the studio's standard casting-session and final-delivery
     wording on a new category. Ordinary editable rows — reword, clear or add."""
 
@@ -142,14 +146,14 @@ class CategoryDeliveryRuleInline(admin.TabularInline):
         return PrefilledFormSet
 
 
-class CategoryPreservationInline(admin.TabularInline):
+class CategoryPreservationInline(UnfoldTabularInline):
     model = CategoryPreservation
     extra = 1
     fields = ('text', 'position')
     verbose_name_plural = 'Care instructions'
 
 
-class PriceTierInline(admin.TabularInline):
+class PriceTierInline(UnfoldTabularInline):
     """Opens with a single Standard Price row — the common case.
 
     Only the amount needs typing. For Baby Casting, switch the dropdown to the
@@ -168,7 +172,7 @@ class PriceTierInline(admin.TabularInline):
     )
 
 
-class ProductImageInline(admin.TabularInline):
+class ProductImageInline(UnfoldTabularInline):
     """Extra photos, with a thumbnail so rows are identifiable once saved."""
 
     model = ProductImage
@@ -194,7 +198,7 @@ class ProductImageInline(admin.TabularInline):
 # ─────────────────────────── catalogue ───────────────────────────
 
 @admin.register(Category)
-class CategoryAdmin(HideTechnicalOnAddMixin, admin.ModelAdmin):
+class CategoryAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
     list_display = ('preview', 'label', 'product_count', 'position', 'is_active')
     list_display_links = ('preview', 'label')
     list_editable = ('position', 'is_active')
@@ -236,7 +240,7 @@ class CategoryAdmin(HideTechnicalOnAddMixin, admin.ModelAdmin):
 
 
 @admin.register(CastingModel)
-class CastingModelAdmin(HideTechnicalOnAddMixin, admin.ModelAdmin):
+class CastingModelAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
     list_display = ('preview', 'label', 'category', 'casting_type',
                     'photo_count', 'price_summary', 'code', 'is_active', 'is_featured')
     list_display_links = ('preview', 'label')
@@ -310,7 +314,7 @@ class CastingModelAdmin(HideTechnicalOnAddMixin, admin.ModelAdmin):
 # ─────────────────────────── content ───────────────────────────
 
 @admin.register(HeroImage)
-class HeroImageAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
+class HeroImageAdmin(HiddenFromIndexMixin, UnfoldModelAdmin):
     list_display = ('preview', 'title', 'subtitle', 'position')
     list_display_links = ('preview', 'title')
     list_editable = ('position',)
@@ -323,7 +327,7 @@ class HeroImageAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
 
 
 @admin.register(GalleryImage)
-class GalleryImageAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
+class GalleryImageAdmin(HiddenFromIndexMixin, UnfoldModelAdmin):
     list_display = ('preview', 'title', 'category', 'position')
     list_display_links = ('preview', 'title')
     list_editable = ('position',)
@@ -338,7 +342,7 @@ class GalleryImageAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
 
 
 @admin.register(Testimonial)
-class TestimonialAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
+class TestimonialAdmin(HiddenFromIndexMixin, UnfoldModelAdmin):
     list_display = ('name', 'category', 'rating', 'position')
     list_editable = ('position',)
     list_filter = ('category', 'rating')
@@ -347,7 +351,7 @@ class TestimonialAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
 
 
 @admin.register(Faq)
-class FaqAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
+class FaqAdmin(HiddenFromIndexMixin, UnfoldModelAdmin):
     list_display = ('question', 'position')
     list_editable = ('position',)
     search_fields = ('question', 'answer')
@@ -355,7 +359,7 @@ class FaqAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
 
 
 @admin.register(ContactMessage)
-class ContactMessageAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
+class ContactMessageAdmin(HiddenFromIndexMixin, UnfoldModelAdmin):
     list_display = ('name', 'phone', 'subject', 'status', 'created_at')
     list_editable = ('status',)
     list_filter = ('status', 'created_at')
@@ -381,7 +385,7 @@ class ContactMessageAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
 
 # ─────────────────────────── settings ───────────────────────────
 
-class SingletonAdmin(admin.ModelAdmin):
+class SingletonAdmin(UnfoldModelAdmin):
     """One row only — hide Add and Delete so it can't be duplicated."""
 
     def has_add_permission(self, request):
@@ -418,21 +422,21 @@ class FooterSettingsAdmin(HiddenFromIndexMixin, SingletonAdmin):
 
 
 @admin.register(BusinessHour)
-class BusinessHourAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
+class BusinessHourAdmin(HiddenFromIndexMixin, UnfoldModelAdmin):
     list_display = ('label', 'hours', 'position')
     list_editable = ('hours', 'position')
     ordering = ('position', 'id')
 
 
 @admin.register(SocialLink)
-class SocialLinkAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
+class SocialLinkAdmin(HiddenFromIndexMixin, UnfoldModelAdmin):
     list_display = ('label', 'icon', 'href', 'position')
     list_editable = ('position',)
     ordering = ('position', 'id')
 
 
 @admin.register(CastingType)
-class CastingTypeAdmin(admin.ModelAdmin):
+class CastingTypeAdmin(UnfoldModelAdmin):
     """How many castings a product contains: 2, 3, 4. The grouping a product
     sits under within its category — e.g. Baby Casting → 2 Casting →
     1 Hand + 1 Feet."""
@@ -475,7 +479,7 @@ admin.site.get_app_list = _ordered_app_list
 
 
 @admin.register(ProductName)
-class ProductNameAdmin(HiddenFromIndexMixin, admin.ModelAdmin):
+class ProductNameAdmin(HiddenFromIndexMixin, UnfoldModelAdmin):
     """The shared vocabulary of product names. Add or remove here and every
     category's list and product dropdown follows."""
 

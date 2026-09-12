@@ -1,14 +1,15 @@
 asgiref==3.12.1
 brotli==1.2.0
 click==8.5.0
-Django==6.1.1
 django-click==2.5.0
 django-tailwind-cli==4.8.0
+django-unfold==0.105.0
+Django==6.1.1
 fonttools==4.65.0
 gunicorn==26.2.0
 pillow==12.3.0
-psycopg==3.3.5
 psycopg-binary==3.3.5
+psycopg==3.3.5
 semver==3.0.4
 sqlparse==0.6.0
 whitenoise==6.12.0
