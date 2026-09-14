@@ -122,7 +122,7 @@
           <label class="block text-sm font-semibold text-text">Frame type</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label class="frame-option-card flex items-start gap-3 p-3.5 rounded-2xl border-2 border-primary bg-primary/5 cursor-pointer transition-all">
-              <input type="radio" name="frame_model" value="Display Box Model" checked class="accent-primary mt-1" />
+              <input type="radio" name="frame_model" value="3D Display Box" checked class="accent-primary mt-1" />
               <div>
                 <p class="text-sm font-semibold text-text">3D Display Box</p>
                 <p class="text-xs text-text-muted">Deep shadow box with acrylic glass cover</p>
@@ -355,11 +355,17 @@
 
 {% block extra_js %}
 <script>
-  let selectedTierLabel = '';
-  const modelLabel = "{{ model.label|escapejs }}";
+  // Initial selection mirrors the tier button rendered as selected (the first).
+  {% with first_tier=model.price_tiers.first %}
+  let selectedTierLabel = "{% if model.price_tiers.count > 1 %}{{ first_tier.get_label_display|escapejs }}{% endif %}";
+  let selectedPrice = {% if model.price_tiers.count > 1 %}{{ first_tier.price }}{% else %}{{ model.starting_price|default:"null" }}{% endif %};
+  {% endwith %}
+  const modelLabel = "{{ product_label|escapejs }}";
+  const modelCode = "{{ model.code|escapejs }}";
   const categoryLabel = "{{ category.label|escapejs }}";
   const whatsappNumber = "{{ site_settings.whatsapp_number }}";
-  const imageUrl = window.location.origin + "{{ model.get_display_image }}";
+  const productUrl = "{{ product_url|escapejs }}";
+  const imageUrl = "{{ image_url|escapejs }}";
 
   function showPhoto(btn, url, caption) {
     const main = document.getElementById('mainImage');
@@ -378,6 +384,7 @@
 
   function selectTier(label, price, btn) {
     selectedTierLabel = label;
+    selectedPrice = price;
     const formatted = '₹' + price.toLocaleString();
     document.getElementById('displayPrice').innerText = formatted;
     // keep the sticky bar in step with the tier the user picked
@@ -411,15 +418,30 @@
   }
 
   function updateWhatsAppLink() {
+    // Keep the wording in step with booking_text in catalog/views.py.
     const frameChoice = document.querySelector('input[name="frame_model"]:checked')?.value;
-    let text = `Hi! I'd like to book "${modelLabel}" under ${categoryLabel}.`;
-    if (selectedTierLabel) {
-      text += ` Selection: ${selectedTierLabel}.`;
-    }
-    if (frameChoice) {
-      text += ` Frame: ${frameChoice}.`;
-    }
-    text += `\nPlease share details.\nPhoto: ${imageUrl}`;
+    const lines = [
+      'Hello Lifecasting Studio,',
+      '',
+      "I'd like to book the following:",
+      '',
+      `• Product: ${modelLabel}`,
+      `• Category: ${categoryLabel}`,
+      `• Product code: ${modelCode}`,
+    ];
+    if (selectedTierLabel) lines.push(`• Age: ${selectedTierLabel}`);
+    if (frameChoice) lines.push(`• Frame: ${frameChoice}`);
+    if (selectedPrice) lines.push(`• Price: ₹${Number(selectedPrice).toLocaleString('en-IN')}`);
+    lines.push(
+      '',
+      `Product link: ${productUrl}`,
+      `Photo: ${imageUrl}`,
+      '',
+      'Could you please share the availability and next steps?',
+      '',
+      'Thank you.',
+    );
+    const text = lines.join('\n');
 
     let url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
     document.getElementById('bookWhatsAppBtn').href = url;
@@ -433,5 +455,8 @@
       updateWhatsAppLink();
     });
   });
+
+  // Replace the server fallback with the full message (age, frame, price).
+  updateWhatsAppLink();
 </script>
 {% endblock %}

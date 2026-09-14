@@ -68,12 +68,29 @@ def product_detail(request, category_slug, model_slug):
 
     related_models = category.models.exclude(id=model_obj.id)[:4]
 
-    # Pre-build WhatsApp link template
-    model_img = request.build_absolute_uri(model_obj.get_display_image())
-    booking_text = (
-        f"Hi! I'd like to book \"{model_obj.label}\" under {category.label}. "
-        f"Please share more details.\nPhoto: {model_img}"
-    )
+    # Booking message. The page's JS rebuilds the same text when the visitor
+    # picks an age or frame; this server copy is the no-JS fallback and must
+    # keep the same wording. build_absolute_uri leaves an already-absolute
+    # URL (S3 images) untouched and prefixes the site for /static/ ones.
+    product_label = ' '.join(model_obj.label.split())
+    product_url = request.build_absolute_uri()
+    image_url = request.build_absolute_uri(model_obj.get_display_image())
+    booking_text = '\n'.join([
+        'Hello Lifecasting Studio,',
+        '',
+        "I'd like to book the following:",
+        '',
+        f'• Product: {product_label}',
+        f'• Category: {category.label}',
+        f'• Product code: {model_obj.code}',
+        '',
+        f'Product link: {product_url}',
+        f'Photo: {image_url}',
+        '',
+        'Could you please share the availability and next steps?',
+        '',
+        'Thank you.',
+    ])
     whatsapp_link = f"https://wa.me/{site_settings.whatsapp_number}?text={urllib.parse.quote(booking_text)}"
 
     context = {
@@ -81,6 +98,9 @@ def product_detail(request, category_slug, model_slug):
         'model': model_obj,
         'related_models': related_models,
         'whatsapp_link': whatsapp_link,
+        'product_label': product_label,
+        'product_url': product_url,
+        'image_url': image_url,
     }
     return render(request, 'catalog/product_detail.html', context)
 
