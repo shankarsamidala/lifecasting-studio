@@ -68,10 +68,6 @@
               </span>
             </div>
 
-            <!-- Star Rating Badge -->
-            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold text-text-subtle bg-surface-alt border border-ink-900/10">
-              ★ {{ model.rating|default:"5.0" }} <span class="text-text-muted font-normal text-xs">({{ model.review_count|default:"24" }} reviews)</span>
-            </span>
           </div>
 
           <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-text tracking-tight leading-tight mb-2">
@@ -98,9 +94,9 @@
               <span class="text-base text-text-muted line-through">₹{{ model.strike_price }}</span>
             {% endif %}
           </div>
-          <p class="text-xs text-text-muted pt-1">
-            *Includes doorstep impression service, raw casting, and custom lacquer finishing in Bangalore.
-          </p>
+          {% if model.description %}
+            <p class="text-xs text-text-muted pt-1">{{ model.description|linebreaksbr }}</p>
+          {% endif %}
         </div>
 
         <!-- Age selector — only when the product has more than one price row -->
@@ -159,9 +155,7 @@
 
           <!-- Live availability & Guarantee Strip -->
           <div class="flex items-center justify-center gap-4 text-xs text-text-muted font-medium flex-wrap pt-1">
-            <span class="flex items-center gap-1 text-success font-semibold">
-              Instant Studio Response
-            </span>
+            <span>Instant Studio Response</span>
             <span>•</span>
             <span>100% Skin Safe</span>
             <span>•</span>
