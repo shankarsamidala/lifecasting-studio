@@ -237,6 +237,16 @@ class CastingModel(models.Model):
         verbose_name='Show on homepage',
         help_text='Featured in the Best-sellers row on the home page.',
     )
+    is_customizable = models.BooleanField(
+        default=True,
+        verbose_name='Customizable',
+        help_text='Show the Customization Options section on the product page.',
+    )
+    has_frame_options = models.BooleanField(
+        default=True,
+        verbose_name='Frame available',
+        help_text='Show the Frame type choice on the product page.',
+    )
     pricing_type = models.CharField(
         max_length=20, choices=PRICING_TYPES.choices, default=PRICING_TYPES.FLAT,
         verbose_name='How is it priced?',

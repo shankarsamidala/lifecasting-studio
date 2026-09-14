@@ -30,11 +30,6 @@
             
           </div>
 
-          <!-- Top Floating Glass Badges -->
-          <div class="absolute top-4 left-4 z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-surface/90 backdrop-blur-md border border-surface/70 shadow-rest text-xs font-semibold text-primary">
-            <span>100% Skin-Safe Dental Gel</span>
-          </div>
-
           {% if category.warranty %}
             <div class="absolute bottom-4 left-4 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ink-900/55 backdrop-blur-md border border-surface/25 text-xs font-semibold text-white">
               {{ category.warranty }}
@@ -126,6 +121,7 @@
         {% endif %}
 
         <!-- Frame Option Selector -->
+        {% if model.has_frame_options %}
         <div class="space-y-3">
           <label class="block text-sm font-semibold text-text">Frame type</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -145,6 +141,7 @@
             </label>
           </div>
         </div>
+        {% endif %}
 
         {% if model.preservation_note %}
           <div class="p-4 rounded-2xl bg-surface-alt border border-ink-900/10 text-xs text-text-muted leading-relaxed">
@@ -178,6 +175,7 @@
         </p>
 
         <!-- Customization Options Checklist -->
+        {% if model.is_customizable %}
         <div class="p-4 rounded-2xl bg-surface-alt/70 border border-ink-900/10 space-y-2">
           <p class="text-xs font-semibold uppercase tracking-wider text-primary">Customization Options</p>
           <div class="flex flex-wrap gap-2 text-xs font-medium text-text">
@@ -188,6 +186,7 @@
             <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Baby Height &amp; Weight Tag</span>
           </div>
         </div>
+        {% endif %}
 
         {% if category.warranty %}
           <div class="p-4 rounded-2xl bg-surface border border-ink-900/10 text-xs text-text leading-relaxed">
@@ -418,12 +417,15 @@
   }
 
   function updateWhatsAppLink() {
-    let frameChoice = document.querySelector('input[name="frame_model"]:checked')?.value || 'Display Box Model';
+    const frameChoice = document.querySelector('input[name="frame_model"]:checked')?.value;
     let text = `Hi! I'd like to book "${modelLabel}" under ${categoryLabel}.`;
     if (selectedTierLabel) {
       text += ` Selection: ${selectedTierLabel}.`;
     }
-    text += ` Frame: ${frameChoice}.\nPlease share details.\nPhoto: ${imageUrl}`;
+    if (frameChoice) {
+      text += ` Frame: ${frameChoice}.`;
+    }
+    text += `\nPlease share details.\nPhoto: ${imageUrl}`;
 
     let url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
     document.getElementById('bookWhatsAppBtn').href = url;

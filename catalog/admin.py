@@ -242,7 +242,7 @@ class CategoryAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
 @admin.register(CastingModel)
 class CastingModelAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
     list_display = ('code', 'label', 'category', 'casting_type',
-                    'photo_count', 'price_summary', 'is_active', 'is_featured')
+                    'price_summary', 'is_active', 'is_featured')
     list_display_links = ('code', 'label')
     list_editable = ('is_active', 'is_featured')
     list_filter = ('category', 'is_active', 'is_featured')
@@ -263,6 +263,10 @@ class CastingModelAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
         }),
         ('Where does it show?', {
             'fields': ('badge', 'is_active', 'is_featured', 'position'),
+        }),
+        ('Options on the product page', {
+            'fields': ('is_customizable', 'has_frame_options'),
+            'description': 'Untick to hide that section for this product.',
         }),
         ('Extra details', {
             'fields': ('preservation_note', 'rating', 'review_count'),
@@ -295,11 +299,6 @@ class CastingModelAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
     @admin.display(description='')
     def preview(self, obj):
         return _thumb(obj)
-
-    @admin.display(description='Photos')
-    def photo_count(self, obj):
-        extra = obj.gallery.count()
-        return f'1 + {extra}' if extra else ('1' if obj.image or obj.image_url else '—')
 
     @admin.display(description='Price')
     def price_summary(self, obj):
