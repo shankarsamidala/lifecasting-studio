@@ -215,7 +215,7 @@ class CategoryAdmin(HideTechnicalOnAddMixin, UnfoldModelAdmin):
         }),
         ('Details shown on the category page', {
             'fields': ('materials_text', 'casting_session_text',
-                       'final_delivery_text', 'casting_process'),
+                       'final_delivery_text'),
             'description': 'Type one point per line — each line becomes a bullet '
                            'on the site. No need for dashes or numbering.',
         }),
