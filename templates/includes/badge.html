@@ -1,0 +1,7 @@
+{# Highlight tag on a product photo. Place inside a `relative` image box. #}
+{# Usage: {% include 'includes/badge.html' with product=m %}            #}
+{% if product.badge %}
+  <span class="pointer-events-none absolute top-3 left-3 z-10 rounded-full bg-primary px-2.5 py-0.5 text-2xs sm:text-xs font-semibold uppercase tracking-wide text-white shadow-rest">
+    {{ product.get_badge_display }}
+  </span>
+{% endif %}

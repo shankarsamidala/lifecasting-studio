@@ -29,6 +29,7 @@
             <button type="button" onclick="openZoom()" class="block h-full w-full cursor-zoom-in border-0 bg-transparent p-0" aria-label="Zoom photo">
               <img decoding="async" id="mainImage" src="{{ model.get_display_image }}" alt="{{ model.label }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </button>
+            {% include 'includes/badge.html' with product=model %}
             <span aria-hidden="true" class="pointer-events-none absolute bottom-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 text-text shadow-rest">
               <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.5 12.5L17 17M8.5 6v5M6 8.5h5" stroke-linecap="round"/></svg>
             </span>
@@ -262,15 +263,7 @@
                   
 
                   <!-- Top Left Badge Tag -->
-                  {% if r.badge %}
-                    <span class="absolute top-3 left-3 bg-ink-900/70 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-rest">
-                      {{ r.badge }}
-                    </span>
-                  {% elif r.group %}
-                    <span class="absolute top-3 left-3 bg-surface/90 backdrop-blur-md text-text text-xs font-semibold px-2.5 py-0.5 rounded-full border border-ink-900/10 uppercase tracking-wider">
-                      {{ r.group }}
-                    </span>
-                  {% endif %}
+                  {% include 'includes/badge.html' with product=r %}
                 </div>
 
                 <!-- Content Container -->
