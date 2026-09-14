@@ -1,0 +1,19 @@
+{% load admin_list unfold %}
+
+{% comment %}
+Override of unfold's pagination footer (django-unfold 0.105.0).
+
+Unfold's bulk-actions bar is fixed to the bottom of the screen at the same
+height as this footer, so once a row is ticked the two overlap and neither is
+readable or clickable. Hide the footer while any row is selected; the actions
+bar shows its own "X of Y selected" count, and the footer returns on clear.
+{% endcomment %}
+<style>
+    body:has(input.action-select:checked) #changelist-pagination { display: none; }
+</style>
+
+{% if cl %}
+    <div id="changelist-pagination" class="px-4 lg:backdrop-blur-xs lg:bg-white/80 lg:flex lg:items-center lg:dark:bg-base-900/80 lg:left-0 lg:right-0 lg:bottom-0 lg:sticky relative z-40 lg:border-t lg:border-base-200 lg:relative lg:scrollable-top lg:dark:border-base-800 {% element_classes 'pagination' %}">
+        {% pagination cl %}
+    </div>
+{% endif %}
