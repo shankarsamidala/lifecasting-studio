@@ -65,17 +65,21 @@
                     <span class="w-2 h-2 rounded-full bg-primary"></span>
                     {{ cat.label }}
                   </a>
-                  {% if cat.models.all %}
+                  {# Casting types in use in this category, not product names: many #}
+                  {# models share a name, and the list stays short as products grow. #}
+                  {% with types=cat.casting_types %}
+                  {% if types %}
                     <ul role="list" class="m-0 mt-2 flex list-none flex-col gap-1.5 p-0 pl-4 border-l border-ink-900/10">
-                      {% for m in cat.models.all %}
+                      {% for t in types %}
                         <li>
-                          <a href="{% url 'catalog:product_detail' category_slug=cat.slug model_slug=m.slug %}" class="font-sans text-xs text-text-muted no-underline transition-colors hover:text-primary">
-                            {{ m.label }}
+                          <a href="{% url 'catalog:category_detail' category_slug=cat.slug %}?group={{ t.slug }}" class="font-sans text-xs text-text-muted no-underline transition-colors hover:text-primary">
+                            {{ t.label }}
                           </a>
                         </li>
                       {% endfor %}
                     </ul>
                   {% endif %}
+                  {% endwith %}
                 </div>
               {% endfor %}
             </div>
@@ -158,122 +162,29 @@
           </a>
         </li>
 
-        <!-- Baby Casting -->
-        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
-          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-baby" aria-expanded="false">
-            <span>Baby casting</span>
-            <span class="animated-plus text-primary shrink-0"></span>
-          </button>
-          <collapsible-content id="mobile-menu-baby" class="collapsible" data-open="false">
-            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}?group=2-casting" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">2casting</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}?group=4-casting" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">4casting</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='parent-with-baby' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Parent with Baby</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='baby-casting' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
-            </ul>
-          </collapsible-content>
-        </li>
-
-        <!-- Couple Casting -->
-        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
-          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-couple" aria-expanded="false">
-            <span>Couple Casting</span>
-            <span class="animated-plus text-primary shrink-0"></span>
-          </button>
-          <collapsible-content id="mobile-menu-couple" class="collapsible" data-open="false">
-            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='couple-casting' model_slug='2-hands-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug='couple-casting' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
-            </ul>
-          </collapsible-content>
-        </li>
-
-        <!-- Sibling Casting -->
-        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
-          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-sibling" aria-expanded="false">
-            <span>Sibling Casting</span>
-            <span class="animated-plus text-primary shrink-0"></span>
-          </button>
-          <collapsible-content id="mobile-menu-sibling" class="collapsible" data-open="false">
-            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='sibling-casting' model_slug='2-hands-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='sibling-casting' model_slug='2-hands-frame' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
-            </ul>
-          </collapsible-content>
-        </li>
-
-        <!-- Aashirvaad Casting -->
-        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
-          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-aashirvaad" aria-expanded="false">
-            <span>Aashirvaad Casting</span>
-            <span class="animated-plus text-primary shrink-0"></span>
-          </button>
-          <collapsible-content id="mobile-menu-aashirvaad" class="collapsible" data-open="false">
-            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='aashirvaad-casting' model_slug='2-hands-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='aashirvaad-casting' model_slug='2-hands-frame' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
-            </ul>
-          </collapsible-content>
-        </li>
-
-        <!-- Family Casting -->
-        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
-          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-family" aria-expanded="false">
-            <span>Family Casting</span>
-            <span class="animated-plus text-primary shrink-0"></span>
-          </button>
-          <collapsible-content id="mobile-menu-family" class="collapsible" data-open="false">
-            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='family-casting' model_slug='3-hands-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='family-casting' model_slug='4-hands-frame' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
-            </ul>
-          </collapsible-content>
-        </li>
-
-        <!-- Pet Casting -->
-        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
-          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-pet" aria-expanded="false">
-            <span>Pet Casting</span>
-            <span class="animated-plus text-primary shrink-0"></span>
-          </button>
-          <collapsible-content id="mobile-menu-pet" class="collapsible" data-open="false">
-            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='pet-casting' model_slug='1-paw-display-box' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Table top (Display box)</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='pet-casting' model_slug='1-paw-frame' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Wallhanging (Frame type)</a></li>
-            </ul>
-          </collapsible-content>
-        </li>
-
-        <!-- Mother Milk Jewellery -->
-        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
-          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-mothermilk" aria-expanded="false">
-            <span>Mother Milk Jewellery</span>
-            <span class="animated-plus text-primary shrink-0"></span>
-          </button>
-          <collapsible-content id="mobile-menu-mothermilk" class="collapsible" data-open="false">
-            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='mother-milk-jewellery' model_slug='gold' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Gold</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='mother-milk-jewellery' model_slug='silver' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Silver</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='mother-milk-jewellery' model_slug='without-metal' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Without metal</a></li>
-            </ul>
-          </collapsible-content>
-        </li>
-
-        <!-- Resin Art -->
-        <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
-          <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-resin" aria-expanded="false">
-            <span>Resin Art</span>
-            <span class="animated-plus text-primary shrink-0"></span>
-          </button>
-          <collapsible-content id="mobile-menu-resin" class="collapsible" data-open="false">
-            <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='resin-art' model_slug='garland-preservation' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Garland preservation</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='resin-art' model_slug='baby-keepsake' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Baby keepsake</a></li>
-              <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:product_detail' category_slug='resin-art' model_slug='parent-keepsake' %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">Parent keepsake</a></li>
-            </ul>
-          </collapsible-content>
-        </li>
+        <!-- Categories, from the DB (same data as the desktop menu) -->
+        {% for cat in all_categories %}
+          {% with types=cat.casting_types %}
+          <li class="mobile-nav__item border-b border-ink-900/10 pb-3 pt-1" data-level="1">
+            {% if types %}
+              <button type="button" onclick="toggleMobileSubmenu(this)" class="mobile-nav__link font-display text-base font-semibold text-text flex w-full items-center justify-between py-2 text-left bg-transparent border-none cursor-pointer hover:text-primary transition-colors" aria-controls="mobile-menu-{{ cat.slug }}" aria-expanded="false">
+                <span>{{ cat.label }}</span>
+                <span class="animated-plus text-primary shrink-0"></span>
+              </button>
+              <collapsible-content id="mobile-menu-{{ cat.slug }}" class="collapsible" data-open="false">
+                <ul class="mobile-nav list--unstyled space-y-2 pl-4 ml-1 mt-1 mb-2 p-0" role="list">
+                  <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug=cat.slug %}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">All models</a></li>
+                  {% for t in types %}
+                    <li class="mobile-nav__item" data-level="2"><a href="{% url 'catalog:category_detail' category_slug=cat.slug %}?group={{ t.slug }}" onclick="closeDrawer()" class="mobile-nav__link text-xs font-medium text-text-muted hover:text-primary block py-1 no-underline">{{ t.label }}</a></li>
+                  {% endfor %}
+                </ul>
+              </collapsible-content>
+            {% else %}
+              <a href="{% url 'catalog:category_detail' category_slug=cat.slug %}" onclick="closeDrawer()" class="mobile-nav__link font-display text-base font-semibold text-text flex items-center justify-between py-2 no-underline hover:text-primary transition-colors">{{ cat.label }}</a>
+            {% endif %}
+          </li>
+          {% endwith %}
+        {% endfor %}
 
         <!-- Customer Service -->
         <li class="mobile-nav__item pt-2" data-level="1">

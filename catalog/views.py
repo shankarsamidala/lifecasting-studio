@@ -1,4 +1,5 @@
 import urllib.parse
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import (
     Category,
@@ -38,11 +39,15 @@ def home(request):
 
 def category_detail(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
-    models_qs = category.models.all()
+    models_qs = category.models.filter(is_active=True).select_related('casting_type')
 
+    # ?group=<casting type slug>, as linked from the filter tabs and the menu.
+    # The legacy free-text `group` field still matches for older links.
     active_filter = request.GET.get('group') or request.GET.get('filter', '')
     if active_filter:
-        models_qs = models_qs.filter(group=active_filter)
+        models_qs = models_qs.filter(
+            Q(casting_type__slug=active_filter) | Q(group=active_filter)
+        )
 
     models_list = list(models_qs)
 

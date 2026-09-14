@@ -123,7 +123,7 @@ class Category(models.Model):
         Nothing to configure: a tab exists precisely when a product in this
         category uses that type, so tabs can never be empty or missing.
         """
-        return (ProductName.objects
+        return (CastingType.objects
                 .filter(products__category=self, products__is_active=True)
                 .distinct()
                 .order_by('position', 'id'))

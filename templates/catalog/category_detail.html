@@ -41,8 +41,9 @@
         >
           All Models
         </a>
-        {% if category.filters %}
-          {% for f in category.filters %}
+        {% with types=category.casting_types %}
+        {% if types %}
+          {% for f in types %}
             <a
               href="{% url 'catalog:category_detail' category_slug=category.slug %}?group={{ f.slug }}{% if sort_param %}&sort={{ sort_param }}{% endif %}"
               {% if active_filter == f.slug %}aria-current="page"{% endif %}
@@ -52,6 +53,7 @@
             </a>
           {% endfor %}
         {% endif %}
+        {% endwith %}
       </div>
 
       <!-- Sort by Price Dropdown -->
