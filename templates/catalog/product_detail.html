@@ -21,8 +21,10 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-12 sm:mb-20">
       
       <!-- Product Image Showcase (Left Column) -->
-      <div class="lg:col-span-6 space-y-4">
-        <div class="relative rounded-2xl overflow-hidden shadow-lift shadow-ink-900/10 border border-ink-900/10 bg-surface group">
+      {# Thumbnails as a vertical list on the left of the photo, at every size. #}
+      {# DOM order is photo first, so flex-row-reverse puts the list on the left. #}
+      <div class="lg:col-span-6 flex flex-row-reverse items-start gap-3">
+        <div class="relative min-w-0 flex-1 rounded-2xl overflow-hidden shadow-lift shadow-ink-900/10 border border-ink-900/10 bg-surface group">
           
           <!-- Main Image -->
           <div class="relative h-[260px] sm:h-[360px] lg:h-[420px] w-full overflow-hidden bg-surface-alt">
@@ -40,7 +42,7 @@
 
         {# Strip only shows once there is a second photo to switch to. #}
         {% if model.all_photos|length > 1 %}
-          <div class="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0" role="group" aria-label="{{ model.label }} photos">
+          <div class="no-scrollbar flex max-h-[260px] shrink-0 flex-col gap-2 overflow-y-auto p-0.5 sm:max-h-[360px] lg:max-h-[420px]" role="group" aria-label="{{ model.label }} photos">
             {% for photo in model.all_photos %}
               <button
                 type="button"
