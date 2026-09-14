@@ -1,0 +1,68 @@
+name: Deploy
+
+# Runs on the self-hosted runner installed on the n8n EC2 box, which is also
+# where the site is served. The image is built and started on the same host,
+# so there is no registry, SSH key or AWS credential involved.
+#
+# Only push/manual triggers: the repo is public, and a self-hosted runner must
+# never execute code from pull requests opened by others.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, lifecasting]
+    env:
+      IMAGE: lifecasting:${{ github.sha }}
+      CONTAINER: lifecasting
+      # Caddy's network; Caddy proxies lifecastingstudio.in to lifecasting:8080.
+      NETWORK: n8n_edge
+      APP_DIR: /opt/lifecasting
+    steps:
+      - uses: actions/checkout@v4
+
+      # Built before the old container is stopped, so a failing build leaves
+      # the live site untouched.
+      - name: Build image
+        run: docker build -t "$IMAGE" -t lifecasting:latest .
+
+      - name: Restart container
+        run: |
+          docker rm -f "$CONTAINER" 2>/dev/null || true
+          docker run -d --name "$CONTAINER" \
+            --restart unless-stopped \
+            --network "$NETWORK" \
+            --env-file "$APP_DIR/.env" \
+            -v "$APP_DIR/media:/app/media" \
+            --memory 512m \
+            "$IMAGE"
+
+      # The entrypoint runs migrations before gunicorn starts, so give it time.
+      - name: Health check
+        run: |
+          for i in $(seq 1 30); do
+            if docker exec "$CONTAINER" python -c "import urllib.request as u; r=u.Request('http://127.0.0.1:8080/', headers={'Host':'lifecastingstudio.in','X-Forwarded-Proto':'https'}); u.urlopen(r, timeout=5)" 2>/dev/null; then
+              echo "Site is up"; exit 0
+            fi
+            if [ "$(docker inspect -f '{{.State.Running}}' "$CONTAINER")" != "true" ]; then
+              echo "Container exited"; break
+            fi
+            sleep 3
+          done
+          docker logs --tail 100 "$CONTAINER"
+          exit 1
+
+      # Keep the current and latest tags only; the box has limited disk.
+      - name: Prune old images
+        if: always()
+        run: |
+          docker images lifecasting --format '{{.Repository}}:{{.Tag}}' \
+            | grep -v -e ":${{ github.sha }}$" -e ':latest$' \
+            | xargs -r docker rmi || true
+          docker image prune -f
