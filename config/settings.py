@@ -254,6 +254,25 @@ STORAGES = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Uploaded images go to S3 when AWS_STORAGE_BUCKET_NAME is set, otherwise to
+# MEDIA_ROOT. No access keys: on EC2 boto3 picks up the instance role, locally
+# it uses your AWS CLI login. The bucket policy makes objects publicly
+# readable, so URLs are plain and cacheable rather than expiring signed links.
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', '')
+if AWS_STORAGE_BUCKET_NAME:
+    AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME', 'ap-south-1')
+    AWS_S3_CUSTOM_DOMAIN = (
+        f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+    )
+    AWS_QUERYSTRING_AUTH = False
+    AWS_DEFAULT_ACL = None
+    # Two uploads with the same name must not overwrite each other.
+    AWS_S3_FILE_OVERWRITE = False
+    # Filenames never change content (see above), so browsers can cache hard.
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'public, max-age=31536000'}
+    STORAGES['default'] = {'BACKEND': 'storages.backends.s3.S3Storage'}
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+
 
 # ─────────────────────────────────────────────────────────────
 # django-unfold — admin theme
