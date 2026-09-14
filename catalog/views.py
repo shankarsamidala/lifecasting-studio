@@ -75,11 +75,9 @@ def product_detail(request, category_slug, model_slug):
 
     # Booking message. The page's JS rebuilds the same text when the visitor
     # picks an age or frame; this server copy is the no-JS fallback and must
-    # keep the same wording. build_absolute_uri leaves an already-absolute
-    # URL (S3 images) untouched and prefixes the site for /static/ ones.
+    # keep the same wording.
     product_label = ' '.join(model_obj.label.split())
     product_url = request.build_absolute_uri()
-    image_url = request.build_absolute_uri(model_obj.get_display_image())
     booking_text = '\n'.join([
         'Hello Lifecasting Studio,',
         '',
@@ -90,7 +88,6 @@ def product_detail(request, category_slug, model_slug):
         f'• Product code: {model_obj.code}',
         '',
         f'Product link: {product_url}',
-        f'Photo: {image_url}',
         '',
         'Could you please share the availability and next steps?',
         '',
@@ -105,7 +102,6 @@ def product_detail(request, category_slug, model_slug):
         'whatsapp_link': whatsapp_link,
         'product_label': product_label,
         'product_url': product_url,
-        'image_url': image_url,
     }
     return render(request, 'catalog/product_detail.html', context)
 

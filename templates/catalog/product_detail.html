@@ -365,7 +365,6 @@
   const categoryLabel = "{{ category.label|escapejs }}";
   const whatsappNumber = "{{ site_settings.whatsapp_number }}";
   const productUrl = "{{ product_url|escapejs }}";
-  const imageUrl = "{{ image_url|escapejs }}";
 
   function showPhoto(btn, url, caption) {
     const main = document.getElementById('mainImage');
@@ -435,7 +434,6 @@
     lines.push(
       '',
       `Product link: ${productUrl}`,
-      `Photo: ${imageUrl}`,
       '',
       'Could you please share the availability and next steps?',
       '',
