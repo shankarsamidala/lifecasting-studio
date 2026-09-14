@@ -26,15 +26,14 @@
           
           <!-- Main Image -->
           <div class="relative h-[260px] sm:h-[360px] lg:h-[420px] w-full overflow-hidden bg-surface-alt">
-            <img decoding="async" loading="lazy" id="mainImage" src="{{ model.get_display_image }}" alt="{{ model.label }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            <button type="button" onclick="openZoom()" class="block h-full w-full cursor-zoom-in border-0 bg-transparent p-0" aria-label="Zoom photo">
+              <img decoding="async" id="mainImage" src="{{ model.get_display_image }}" alt="{{ model.label }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+            </button>
+            <span aria-hidden="true" class="pointer-events-none absolute bottom-3 right-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 text-text shadow-rest">
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.5 12.5L17 17M8.5 6v5M6 8.5h5" stroke-linecap="round"/></svg>
+            </span>
             
           </div>
-
-          {% if category.warranty %}
-            <div class="absolute bottom-4 left-4 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ink-900/55 backdrop-blur-md border border-surface/25 text-xs font-semibold text-white">
-              {{ category.warranty }}
-            </div>
-          {% endif %}
 
         </div>
 
@@ -63,7 +62,7 @@
         <div>
           <div class="flex items-center justify-between gap-2 flex-wrap mb-3">
             <div class="flex items-center gap-2">
-              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-surface-alt text-text-subtle uppercase tracking-wider">
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold bg-surface-alt text-text-subtle uppercase tracking-wider">
                 {{ category.label }}
               </span>
             </div>
@@ -74,14 +73,14 @@
             {{ model.label }}
           </h1>
           
-          <p class="text-xs text-text-muted">
+          <p class="text-sm text-text-muted">
             Custom handcrafted 3D impression frame capturing lifelong memories in gold and silver finish.
           </p>
         </div>
 
         <!-- Dynamic Price Display Card -->
         <div class="p-6 rounded-2xl bg-gradient-to-br from-surface to-surface-alt/70 border border-ink-900/10 shadow-rest space-y-1.5">
-          <p class="text-xs font-semibold text-primary uppercase tracking-wider">Starting Price</p>
+          <p class="text-sm font-semibold text-primary uppercase tracking-wider">Starting Price</p>
           <div class="flex items-baseline gap-3 flex-wrap">
             <span id="displayPrice" class="font-display text-4xl sm:text-5xl font-semibold text-primary tracking-tight">
               {% if model.starting_price %}
@@ -95,21 +94,21 @@
             {% endif %}
           </div>
           {% if model.description %}
-            <p class="text-xs text-text-muted pt-1">{{ model.description|linebreaksbr }}</p>
+            <p class="text-sm text-text-muted pt-1">{{ model.description|linebreaksbr }}</p>
           {% endif %}
         </div>
 
         <!-- Age selector — only when the product has more than one price row -->
         {% if model.price_tiers.count > 1 %}
           <div class="space-y-3">
-            <label class="block text-sm font-semibold text-text">Age</label>
+            <label class="block text-base font-semibold text-text">Age</label>
             <div class="grid grid-cols-2 gap-3">
               {% for tier in model.price_tiers.all %}
                 <button type="button"
                         onclick="selectTier('{{ tier.get_label_display|escapejs }}', {{ tier.price }}, this)"
-                        class="tier-btn p-3.5 rounded-2xl border text-left font-sans text-sm font-medium transition-all duration-300 {% if forloop.first %}border-2 border-primary bg-primary/10 text-primary font-semibold shadow-rest{% else %}border-ink-900/10 bg-surface text-text hover:border-ink-900/15{% endif %}">
-                  <div class="font-semibold text-text text-sm">{{ tier.get_label_display }}</div>
-                  <div class="text-xs font-semibold text-primary mt-1 nums">₹{{ tier.price }}</div>
+                        class="tier-btn p-3.5 rounded-2xl border text-left font-sans text-base font-medium transition-all duration-300 {% if forloop.first %}border-2 border-primary bg-primary/10 text-primary font-semibold shadow-rest{% else %}border-ink-900/10 bg-surface text-text hover:border-ink-900/15{% endif %}">
+                  <div class="font-semibold text-text text-base">{{ tier.get_label_display }}</div>
+                  <div class="text-sm font-semibold text-primary mt-1 nums">₹{{ tier.price }}</div>
                 </button>
               {% endfor %}
             </div>
@@ -119,20 +118,20 @@
         <!-- Frame Option Selector -->
         {% if model.has_frame_options %}
         <div class="space-y-3">
-          <label class="block text-sm font-semibold text-text">Frame type</label>
+          <label class="block text-base font-semibold text-text">Frame type</label>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label class="frame-option-card flex items-start gap-3 p-3.5 rounded-2xl border-2 border-primary bg-primary/5 cursor-pointer transition-all">
               <input type="radio" name="frame_model" value="3D Display Box" checked class="accent-primary mt-1" />
               <div>
-                <p class="text-sm font-semibold text-text">3D Display Box</p>
-                <p class="text-xs text-text-muted">Deep shadow box with acrylic glass cover</p>
+                <p class="text-base font-semibold text-text">3D Display Box</p>
+                <p class="text-sm text-text-muted">Deep shadow box with acrylic glass cover</p>
               </div>
             </label>
             <label class="frame-option-card flex items-start gap-3 p-3.5 rounded-2xl border border-ink-900/10 bg-surface hover:border-ink-900/15 cursor-pointer transition-all">
               <input type="radio" name="frame_model" value="Classic Frame" class="accent-primary mt-1" />
               <div>
-                <p class="text-sm font-semibold text-text">Classic Frame</p>
-                <p class="text-xs text-text-muted">Traditional wood moulding finish</p>
+                <p class="text-base font-semibold text-text">Classic Frame</p>
+                <p class="text-sm text-text-muted">Traditional wood moulding finish</p>
               </div>
             </label>
           </div>
@@ -140,7 +139,7 @@
         {% endif %}
 
         {% if model.preservation_note %}
-          <div class="p-4 rounded-2xl bg-surface-alt border border-ink-900/10 text-xs text-text-muted leading-relaxed">
+          <div class="p-4 rounded-2xl bg-surface-alt border border-ink-900/10 text-sm text-text-muted leading-relaxed">
             <span class="font-semibold text-text-subtle block mb-1">Preservation note</span>
             {{ model.preservation_note }}
           </div>
@@ -154,7 +153,7 @@
           </a>
 
           <!-- Live availability & Guarantee Strip -->
-          <div class="flex items-center justify-center gap-4 text-xs text-text-muted font-medium flex-wrap pt-1">
+          <div class="flex items-center justify-center gap-4 text-sm text-text-muted font-medium flex-wrap pt-1">
             <span>Instant Studio Response</span>
             <span>•</span>
             <span>100% Skin Safe</span>
@@ -164,15 +163,15 @@
         </div>
 
         <!-- Prominent Disclaimer Font -->
-        <p class="text-sm font-semibold text-text pt-1 border-t border-ink-900/10">
+        <p class="text-base font-semibold text-text pt-1 border-t border-ink-900/10">
           All prices are in Indian Rupees (INR). Final pricing may vary based on customization.
         </p>
 
         <!-- Customization Options Checklist -->
         {% if model.is_customizable %}
         <div class="p-4 rounded-2xl bg-surface-alt/70 border border-ink-900/10 space-y-2">
-          <p class="text-xs font-semibold uppercase tracking-wider text-primary">Customization Options</p>
-          <div class="flex flex-wrap gap-2 text-xs font-medium text-text">
+          <p class="text-sm font-semibold uppercase tracking-wider text-primary">Customization Options</p>
+          <div class="flex flex-wrap gap-2 text-sm font-medium text-text">
             <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Frame Style</span>
             <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Photo Inclusion</span>
             <span class="px-2.5 py-1 rounded-full bg-surface border border-ink-900/10">Nameplate Engraving</span>
@@ -183,7 +182,7 @@
         {% endif %}
 
         {% if category.warranty %}
-          <div class="p-4 rounded-2xl bg-surface border border-ink-900/10 text-xs text-text leading-relaxed">
+          <div class="p-4 rounded-2xl bg-surface border border-ink-900/10 text-sm text-text leading-relaxed">
             <span class="font-semibold text-primary block mb-1">Warranty Period</span>
             {{ category.warranty }}
           </div>
@@ -191,11 +190,11 @@
 
         <!-- Specifications & Delivery Details -->
         <div class="p-5 rounded-2xl bg-surface border border-ink-900/10 shadow-rest space-y-4">
-          <h2 class="font-display font-semibold text-sm text-text uppercase tracking-wider">
+          <h2 class="font-display font-semibold text-base text-text uppercase tracking-wider">
             Casting &amp; Delivery Details
           </h2>
           
-          <div class="space-y-3 text-xs text-text-muted leading-relaxed">
+          <div class="space-y-3 text-sm text-text-muted leading-relaxed">
             <div>
               <p class="font-semibold text-text">For Casting:</p>
               <ul class="list-disc pl-4 space-y-1 mt-1">
@@ -323,6 +322,20 @@
 
   </div>
 </div>
+
+<!-- PHOTO ZOOM VIEWER
+     Opens on tapping the main photo. Shows the whole image (object-contain);
+     click/tap toggles 2.5x zoom centred where you pressed, and moving the
+     pointer pans. Phones can also pinch. Esc, the close button or the
+     backdrop closes it. -->
+<dialog id="zoomDialog" class="m-0 h-full max-h-none w-full max-w-none bg-ink-900 p-0 backdrop:bg-ink-900" onclick="if (event.target === this) closeZoom()">
+  <div class="relative flex h-full w-full items-center justify-center overflow-hidden" id="zoomStage">
+    <img id="zoomImage" src="" alt="" class="max-h-full max-w-full cursor-zoom-in select-none object-contain transition-transform duration-200" style="touch-action: pinch-zoom;" />
+    <button type="button" onclick="closeZoom()" class="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full border-0 bg-surface/90 text-text shadow-rest cursor-pointer" aria-label="Close zoom">
+      <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 5l10 10M15 5L5 15" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</dialog>
 
 <!-- STICKY BOOKING BAR (mobile)
      On a phone the Book CTA sits roughly 1500px down the page, below the
@@ -453,6 +466,44 @@
       updateWhatsAppLink();
     });
   });
+
+  // --- Photo zoom ---
+  const zoomDialog = document.getElementById('zoomDialog');
+  const zoomImage = document.getElementById('zoomImage');
+  let zoomed = false;
+
+  function setZoom(on, e) {
+    zoomed = on;
+    if (on && e) panTo(e);
+    zoomImage.style.transform = on ? 'scale(2.5)' : '';
+    zoomImage.classList.toggle('cursor-zoom-in', !on);
+    zoomImage.classList.toggle('cursor-zoom-out', on);
+  }
+
+  function openZoom() {
+    const main = document.getElementById('mainImage');
+    zoomImage.src = main.src;
+    zoomImage.alt = main.alt;
+    setZoom(false);
+    zoomDialog.showModal();
+  }
+
+  function closeZoom() {
+    setZoom(false);
+    zoomDialog.close();
+  }
+
+  zoomImage.addEventListener('click', e => { e.stopPropagation(); setZoom(!zoomed, e); });
+  // Origin follows the pointer across the viewer (not the scaled image, whose
+  // box moves as the origin changes and would make the pan jitter).
+  function panTo(e) {
+    const r = document.getElementById('zoomStage').getBoundingClientRect();
+    const x = Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1);
+    const y = Math.min(Math.max((e.clientY - r.top) / r.height, 0), 1);
+    zoomImage.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+  }
+  zoomImage.addEventListener('mousemove', e => { if (zoomed) panTo(e); });
+  zoomDialog.addEventListener('close', () => setZoom(false));
 
   // Replace the server fallback with the full message (age, frame, price).
   updateWhatsAppLink();
