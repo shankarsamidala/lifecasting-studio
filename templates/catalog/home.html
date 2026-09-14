@@ -249,21 +249,12 @@
             class="group flex flex-col items-center gap-2 no-underline"
           >
             <span class="block aspect-square w-28 overflow-hidden {% if forloop.counter|divisibleby:2 %}rounded-cast-alt{% else %}rounded-cast{% endif %} shadow-rest ring-1 ring-ink-900/5 transition-all duration-500 group-hover:scale-105 group-hover:shadow-lift sm:w-36 lg:w-40">
-              {% if cat.models.first %}
-                <img decoding="async"
-                  src="{{ cat.models.first.get_display_image }}"
-                  alt="{{ cat.label }}"
-                  loading="lazy"
-                  class="h-full w-full object-cover"
-                />
-              {% else %}
-                <img decoding="async"
-                  src="/static/images/gallery/1h1f-standard.webp"
-                  alt="{{ cat.label }}"
-                  loading="lazy"
-                  class="h-full w-full object-cover"
-                />
-              {% endif %}
+              <img decoding="async"
+                src="{{ cat.get_display_image }}"
+                alt="{{ cat.label }}"
+                loading="lazy"
+                class="h-full w-full object-cover"
+              />
             </span>
             <span class="text-center font-sans text-xs leading-tight font-medium text-text transition-colors duration-300 group-hover:text-primary sm:text-sm">
               {{ cat.label }}
@@ -281,21 +272,12 @@
               class="group flex flex-col items-center gap-2 no-underline"
             >
               <span class="relative block aspect-square w-28 sm:w-36 lg:w-40 overflow-hidden rounded-cast shadow-rest ring-2 ring-ink-900/10 transition-all duration-500 group-hover:scale-105 group-hover:shadow-lift">
-                {% if eighth_cat.models.first %}
-                  <img decoding="async"
-                    src="{{ eighth_cat.models.first.get_display_image }}"
-                    alt="{{ eighth_cat.label }}"
-                    loading="lazy"
-                    class="h-full w-full object-cover blur-[1px] scale-105 opacity-85"
-                  />
-                {% else %}
-                  <img decoding="async"
-                    src="/static/images/gallery/two-1.webp"
-                    alt="{{ eighth_cat.label }}"
-                    loading="lazy"
-                    class="h-full w-full object-cover blur-[1px] scale-105 opacity-85"
-                  />
-                {% endif %}
+                <img decoding="async"
+                  src="{{ eighth_cat.get_display_image }}"
+                  alt="{{ eighth_cat.label }}"
+                  loading="lazy"
+                  class="h-full w-full object-cover blur-[1px] scale-105 opacity-85"
+                />
                 <span class="absolute inset-0 bg-ink-900/40 backdrop-blur-[1px] flex items-center justify-center font-display text-2xl sm:text-3xl font-semibold text-white shadow-inner">
                   +{{ all_categories.count|add:"-7" }}
                 </span>
